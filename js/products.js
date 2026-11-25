@@ -51,6 +51,15 @@ window.PRODUCTS = [
     icon: 'earbuds',
     features: ['Bluetooth', 'Varios colores', 'Estuche de carga', 'Precio económico'],
   },
+  {
+    id: 'aud-movisun', dropiId: '2072830', provider: 'MOVISUN', cat: 'audio',
+    name: 'Parlante Bluetooth Movisun Glumax 10W', badge: '',
+    short: 'Parlante Bluetooth portátil de 10W con buen sonido para fiestas.',
+    price: 89900, was: 0,
+    img: CDN + '2072830/1770044704D_NQ_NP_2X_961308-MLA96871386825_102025-F.jpg',
+    icon: 'speaker',
+    features: ['Bluetooth', '10W de potencia', 'Portátil y recargable', 'Buen bajo'],
+  },
 
   // ---------- WEARABLES ----------
   {
@@ -123,6 +132,15 @@ window.PRODUCTS = [
     icon: 'camera',
     features: ['Marca TP-Link', 'Control por app', 'Seguimiento de movimiento', 'Visión nocturna'],
   },
+  {
+    id: 'hog-bombparlante', dropiId: '1987268', provider: 'BOODE+', cat: 'hogar',
+    name: 'Bombillo Parlante Bluetooth RGB', badge: 'Nuevo',
+    short: 'Bombillo LED RGB con parlante Bluetooth integrado y control remoto.',
+    price: 40000, was: 0,
+    img: CDN + '1987268/1762469417bombillo%20%20parlante1.png',
+    icon: 'bulb',
+    features: ['Luz RGB de colores', 'Parlante Bluetooth integrado', 'Control remoto', 'Fácil instalación'],
+  },
 
   // ---------- CREADORES ----------
   {
@@ -152,4 +170,6 @@ window.ICONS = {
   charger: '<rect x="12" y="14" width="24" height="22" rx="5"/><path d="M19 14V8M29 14V8M24 22l-3 5h6l-3 5"/>',
   camera: '<rect x="8" y="16" width="32" height="20" rx="5"/><circle cx="24" cy="26" r="6"/><path d="M18 16l2-5h8l2 5"/>',
   ring: '<circle cx="24" cy="20" r="12"/><circle cx="24" cy="20" r="6"/><path d="M24 32v10M16 42h16"/>',
+  speaker: '<rect x="14" y="6" width="20" height="36" rx="8"/><circle cx="24" cy="28" r="6"/><circle cx="24" cy="14" r="1.6"/>',
+  bulb: '<path d="M24 6a12 12 0 0 0-6 22c1 1 2 3 2 5h8c0-2 1-4 2-5a12 12 0 0 0-6-22Z"/><path d="M20 38h8M21 42h6"/>',
 };
