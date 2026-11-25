@@ -16,6 +16,7 @@ if (canvas) boot(canvas);
 function boot(canvas) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const coarse = matchMedia('(pointer: coarse)').matches;
+  let maxDPR = coarse ? 1.2 : 1.5; // tope de resolución; la calidad adaptativa puede bajarlo
 
   let renderer;
   try {
@@ -53,24 +54,35 @@ function boot(canvas) {
   magenta.position.set(4, -2, 2);
   scene.add(magenta);
 
-  // Material de cristal
+  // Cristal con refracción: SOLO para el cubo principal (es lo más costoso de renderizar)
   const glass = new THREE.MeshPhysicalMaterial({
     color: 0xcfdcff,
     metalness: 0,
-    roughness: 0.05,
+    roughness: 0.06,
     transmission: 1,
     thickness: 2.2,
     ior: 1.5,
-    iridescence: 1,
+    iridescence: 0.7,
     iridescenceIOR: 1.3,
     iridescenceThicknessRange: [120, 620],
-    clearcoat: 0.6,
+    clearcoat: 0.5,
     clearcoatRoughness: 0.1,
-    envMapIntensity: 0.5,
+    envMapIntensity: 0.6,
     attenuationColor: new THREE.Color(0x5f7fc0),
     attenuationDistance: 1.8,
   });
-  if ('dispersion' in glass) glass.dispersion = 0.6;
+  // Sin dispersion: el efecto arcoíris por refracción multiplica el costo por píxel.
+
+  // Material liviano para los cubos pequeños: reflejante y translúcido, pero SIN
+  // refracción, así podemos tener muchos sin que el equipo se ahogue.
+  const miniMat = new THREE.MeshStandardMaterial({
+    color: 0xacc4ff,
+    metalness: 0.2,
+    roughness: 0.08,
+    envMapIntensity: 1.5,
+    transparent: true,
+    opacity: 0.6,
+  });
 
   // Haz de luz espectral detrás del cubo (lo que se ve "dentro" del cristal)
   const beamTex = makeBeamTexture();
@@ -93,11 +105,11 @@ function boot(canvas) {
   scene.add(hero);
 
   // Cubos pequeños
-  const count = coarse ? 6 : 10;
+  const count = coarse ? 5 : 8;
   const minis = [];
   for (let i = 0; i < count; i++) {
     const size = 0.28 + Math.random() * 0.5;
-    const m = new THREE.Mesh(new RoundedBoxGeometry(size, size, size, 4, size * 0.14), glass);
+    const m = new THREE.Mesh(new RoundedBoxGeometry(size, size, size, 3, size * 0.14), miniMat);
     const depth = -2.5 + Math.random() * 4;
     minis.push({
       mesh: m,
@@ -143,7 +155,7 @@ function boot(canvas) {
     W = w;
     H = h;
     aspect = W / H;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDPR));
     renderer.setSize(W, H, false);
     camera.aspect = aspect;
     camera.updateProjectionMatrix();
@@ -186,6 +198,8 @@ function boot(canvas) {
 
   const clock = new THREE.Clock();
   let running = true;
+  let slowAcc = 0;
+  let qualityDropped = false;
   document.addEventListener('visibilitychange', () => {
     running = !document.hidden;
     if (running) {
@@ -200,6 +214,20 @@ function boot(canvas) {
 
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
+
+    // Calidad adaptativa: si el equipo va lento de forma sostenida, baja la
+    // resolución una sola vez para recuperar fluidez (no se vuelve a tocar).
+    if (!reduce && !qualityDropped) {
+      if (dt > 0.03) slowAcc++;
+      else if (dt < 0.02 && slowAcc > 0) slowAcc--;
+      if (slowAcc > 40) {
+        qualityDropped = true;
+        maxDPR = 1;
+        renderer.setPixelRatio(1);
+        renderer.setSize(W, H, false);
+        hero.material.iridescence = 0.3;
+      }
+    }
 
     const max = Math.max(1, document.documentElement.scrollHeight - H);
     const p = Math.min(1, Math.max(0, scrollY / max));
