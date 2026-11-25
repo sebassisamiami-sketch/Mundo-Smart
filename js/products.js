@@ -15,6 +15,7 @@ window.CATEGORIES = [
   { id: 'wearables', name: 'Wearables', desc: 'Relojes inteligentes', icon: 'watch' },
   { id: 'carga', name: 'Carga', desc: 'Cargadores', icon: 'charger' },
   { id: 'hogar', name: 'Hogar smart', desc: 'Cámaras y seguridad wifi', icon: 'camera' },
+  { id: 'accesorios', name: 'Accesorios', desc: 'Soportes para celular', icon: 'stand' },
   { id: 'creadores', name: 'Creadores', desc: 'Aros de luz y trípodes', icon: 'ring' },
 ];
 
@@ -142,6 +143,44 @@ window.PRODUCTS = [
     features: ['Luz RGB de colores', 'Parlante Bluetooth integrado', 'Control remoto', 'Fácil instalación'],
   },
 
+  // ---------- ACCESORIOS ----------
+  {
+    id: 'acc-tripode', dropiId: '2180548', provider: 'MARTVENTAS', cat: 'accesorios',
+    name: 'Trípode Flexible Soporte Celular', badge: 'Top',
+    short: 'Trípode flexible que se adapta a cualquier superficie para grabar o ver videos.',
+    price: 55000, was: 0,
+    img: CDN + '2180548/17818328551qal%C3%B1%7B.jpg',
+    icon: 'stand',
+    features: ['Patas flexibles', 'Se agarra a cualquier superficie', 'Soporte universal', 'Ligero'],
+  },
+  {
+    id: 'acc-cuello', dropiId: '2032917', provider: 'BOODE+', cat: 'accesorios',
+    name: 'Soporte Celular de Cuello Holder', badge: '',
+    short: 'Soporte de cuello manos libres para ver videos cómodamente.',
+    price: 35000, was: 0,
+    img: CDN + '2032917/176789187541vnAsmmQpL._AC_.jpg',
+    icon: 'stand',
+    features: ['Manos libres', 'Flexible y ajustable', 'Cómodo para el cuello', 'Varios colores'],
+  },
+  {
+    id: 'acc-carrochupa', dropiId: '1734191', provider: 'HELMAN', cat: 'accesorios',
+    name: 'Soporte Celular Carro con Ventosa', badge: '',
+    short: 'Soporte para el carro con ventosa, giro 360° y agarre firme.',
+    price: 29000, was: 0,
+    img: CDN + '1734191/1743090360D_NQ_NP_856602-MLA82567556169_022025-O.png',
+    icon: 'stand',
+    features: ['Ventosa fuerte', 'Giro 360°', 'Para el panel o vidrio', 'Agarre firme'],
+  },
+  {
+    id: 'acc-carrorej', dropiId: '844494', provider: 'DIEGO', cat: 'accesorios',
+    name: 'Soporte Celular Carro Universal', badge: '',
+    short: 'Soporte de carro compatible con todas las referencias de celular.',
+    price: 23000, was: 0,
+    img: CDN + '844494/1715220505PP1.jpg',
+    icon: 'stand',
+    features: ['Universal', 'Instalación fácil', 'Agarre seguro', 'Buen precio'],
+  },
+
   // ---------- CREADORES ----------
   {
     // Favoriteado en Dropi (ID 957884), pero su página de detalle no carga (parece
@@ -172,4 +211,5 @@ window.ICONS = {
   ring: '<circle cx="24" cy="20" r="12"/><circle cx="24" cy="20" r="6"/><path d="M24 32v10M16 42h16"/>',
   speaker: '<rect x="14" y="6" width="20" height="36" rx="8"/><circle cx="24" cy="28" r="6"/><circle cx="24" cy="14" r="1.6"/>',
   bulb: '<path d="M24 6a12 12 0 0 0-6 22c1 1 2 3 2 5h8c0-2 1-4 2-5a12 12 0 0 0-6-22Z"/><path d="M20 38h8M21 42h6"/>',
+  stand: '<rect x="15" y="6" width="18" height="28" rx="3"/><rect x="19" y="10" width="10" height="16" rx="1.5"/><path d="M24 34v5M16 42h16"/>',
 };
