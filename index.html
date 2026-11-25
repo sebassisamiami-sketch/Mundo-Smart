@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mundo Smart · Tecnología, gadgets y artículos inteligentes</title>
+  <meta name="description" content="Electrónica, accesorios de celular y artículos inteligentes con envío a toda Colombia y pago contra entrega." />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%230c0c0d%27/%3E%3Cpath d=%27M32 14l16 9v18l-16 9-16-9V23z%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#inicio" aria-label="Mundo Smart, inicio">Mundo<span>+</span>Smart</a>
+    <nav class="nav-links" id="navLinks" aria-label="Principal">
+      <a href="#categorias">Categorías</a>
+      <a href="#productos">Productos</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#faq">Envíos y dudas</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="cart-btn" id="cartOpen" aria-label="Abrir carrito">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20 8H6.2"/><circle cx="10" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="burger" id="burger" aria-label="Menú" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="hero-inner">
+        <p class="eyebrow" data-reveal>Tecnología · Gadgets · Smart</p>
+        <h1 class="headline" aria-label="Vive en modo smart.">
+          <span class="line"><span class="w" style="--i:0">Vive</span> <span class="w" style="--i:1">en</span></span>
+          <span class="line"><span class="w" style="--i:2">modo</span> <span class="w grad" style="--i:3">smart.</span></span>
+        </h1>
+        <p class="lead" data-reveal style="--d:.5s">Electrónica, accesorios de celular y artículos inteligentes. Envíos a toda Colombia y pago contra entrega.</p>
+        <div class="cta" data-reveal style="--d:.65s">
+          <a class="btn primary" href="#productos">Ver productos</a>
+          <a class="btn ghost" href="#como-funciona">Cómo funciona</a>
+        </div>
+      </div>
+      <a class="scroll-hint" href="#categorias" aria-label="Bajar"><span></span></a>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Audífonos</span><i></i><span>Smartwatch</span><i></i><span>Cargadores</span><i></i><span>Hogar inteligente</span><i></i><span>Accesorios</span><i></i><span>Creadores</span><i></i>
+        <span>Audífonos</span><i></i><span>Smartwatch</span><i></i><span>Cargadores</span><i></i><span>Hogar inteligente</span><i></i><span>Accesorios</span><i></i><span>Creadores</span><i></i>
+      </div>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    <section class="section" id="categorias">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>Categorías</p>
+          <h2 data-reveal style="--d:.08s">Todo lo smart,<br />en un solo lugar.</h2>
+        </div>
+        <div class="cat-grid" id="catGrid"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section class="section" id="productos">
+      <div class="wrap">
+        <div class="section-head row">
+          <div>
+            <p class="eyebrow" data-reveal>Catálogo</p>
+            <h2 data-reveal style="--d:.08s">Lo más pedido.</h2>
+          </div>
+          <div class="controls" data-reveal style="--d:.12s">
+            <label class="search">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>
+              <input id="search" type="search" placeholder="Buscar producto" autocomplete="off" />
+            </label>
+            <select id="sort" aria-label="Ordenar">
+              <option value="rel">Destacados</option>
+              <option value="asc">Precio: menor a mayor</option>
+              <option value="desc">Precio: mayor a menor</option>
+            </select>
+          </div>
+        </div>
+        <div class="chips" id="chips" role="tablist" aria-label="Filtrar por categoría"></div>
+        <div class="grid" id="grid" aria-live="polite"></div>
+        <p class="empty" id="empty" hidden>No encontramos productos con esa búsqueda.</p>
+      </div>
+    </section>
+
+    <!-- POR QUÉ -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>Por qué Mundo Smart</p>
+          <h2 data-reveal style="--d:.08s">Comprar tecnología<br />sin complicarte.</h2>
+        </div>
+        <div class="features">
+          <article class="feature" data-reveal><span class="num">01</span><h3>Pago contra entrega</h3><p>Pagas cuando recibes tu pedido en casa, en toda Colombia.</p></article>
+          <article class="feature" data-reveal style="--d:.08s"><span class="num">02</span><h3>Envíos a todo el país</h3><p>Despachamos a ciudades y municipios con seguimiento de guía.</p></article>
+          <article class="feature" data-reveal style="--d:.16s"><span class="num">03</span><h3>Envíos internacionales</h3><p>También enviamos fuera de Colombia, bajo pedido y con costo confirmado.</p></article>
+          <article class="feature" data-reveal style="--d:.24s"><span class="num">04</span><h3>Atención por WhatsApp</h3><p>Resolvemos tus dudas antes y después de la compra.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA -->
+    <section class="section" id="como-funciona">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>Cómo funciona</p>
+          <h2 data-reveal style="--d:.08s">Tres pasos y listo.</h2>
+        </div>
+        <ol class="steps">
+          <li data-reveal><span>1</span><h3>Elige</h3><p>Explora el catálogo y agrega lo que quieras al carrito.</p></li>
+          <li data-reveal style="--d:.1s"><span>2</span><h3>Confirma</h3><p>Déjanos tus datos de envío y confirma tu pedido.</p></li>
+          <li data-reveal style="--d:.2s"><span>3</span><h3>Recibe</h3><p>Te llega a la puerta y pagas al recibir (en Colombia).</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="wrap narrow">
+        <div class="section-head">
+          <p class="eyebrow" data-reveal>Envíos y dudas</p>
+          <h2 data-reveal style="--d:.08s">Preguntas frecuentes.</h2>
+        </div>
+        <div class="faq" data-reveal>
+          <details><summary>¿Cuánto tarda en llegar mi pedido?</summary><p id="faqCO">En Colombia, entre 2 y 5 días hábiles según la ciudad.</p></details>
+          <details><summary>¿Hacen envíos internacionales?</summary><p id="faqIntl">Sí, bajo pedido. Te confirmamos el costo y el tiempo antes de cobrar. Pueden aplicar impuestos de aduana del país de destino.</p></details>
+          <details><summary>¿Cómo pago?</summary><p>En Colombia puedes pagar contra entrega. Para otros países te indicamos el método disponible al confirmar el pedido.</p></details>
+          <details><summary>¿Puedo devolver un producto?</summary><p>Sí. Si el producto llega con defectos o no corresponde a lo pedido, escríbenos por WhatsApp y lo resolvemos. También aplica el derecho de retracto en compras a distancia.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-final">
+      <div class="wrap">
+        <h2 data-reveal>¿Tienes dudas?<br /><span class="grad">Hablemos.</span></h2>
+        <a class="btn primary" id="waCta" href="#" target="_blank" rel="noopener" data-reveal style="--d:.1s">Escribir por WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot">
+      <a class="brand" href="#inicio">Mundo<span>+</span>Smart</a>
+      <p>© <span id="year"></span> Mundo Smart. Tecnología y gadgets.</p>
+    </div>
+  </footer>
+
+  <!-- Overlay general -->
+  <div class="overlay" id="overlay" hidden></div>
+
+  <!-- Modal de producto -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+    <button class="x" id="modalClose" aria-label="Cerrar">×</button>
+    <div class="m-media" id="mMedia"></div>
+    <div class="m-body">
+      <p class="eyebrow" id="mCat"></p>
+      <h3 id="mTitle"></h3>
+      <p class="m-price" id="mPrice"></p>
+      <p class="m-short" id="mShort"></p>
+      <ul class="m-feats" id="mFeats"></ul>
+      <div class="m-actions">
+        <div class="qty" id="mQty"><button type="button" data-q="-1" aria-label="Menos">−</button><span id="mQtyVal">1</span><button type="button" data-q="1" aria-label="Más">+</button></div>
+        <button class="btn primary" id="mAdd">Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito -->
+  <aside class="drawer" id="drawer" aria-label="Carrito" aria-hidden="true">
+    <div class="d-head">
+      <h3 id="dTitle">Tu carrito</h3>
+      <button class="x" id="drawerClose" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="d-view" id="viewCart">
+      <div class="d-items" id="items"></div>
+      <div class="d-foot" id="cartFoot">
+        <div class="ship-bar"><div id="shipFill"></div></div>
+        <p class="ship-note" id="shipNote"></p>
+        <div class="row"><span>Subtotal</span><b id="subtotal"></b></div>
+        <div class="row"><span>Envío estimado</span><b id="shipping"></b></div>
+        <div class="row total"><span>Total</span><b id="total"></b></div>
+        <button class="btn primary block" id="toCheckout">Continuar</button>
+      </div>
+    </div>
+
+    <form class="d-view" id="viewCheckout" hidden novalidate>
+      <div class="d-items form">
+        <button type="button" class="back" id="backCart">← Volver al carrito</button>
+        <label>País
+          <select name="country" id="fCountry">
+            <option value="CO">Colombia</option>
+            <option value="OTHER">Otro país</option>
+          </select>
+        </label>
+        <p class="hint" id="countryHint"></p>
+        <label>Nombre completo<input name="name" autocomplete="name" required /></label>
+        <label>Celular / WhatsApp<input name="phone" inputmode="tel" autocomplete="tel" required placeholder="3001234567" /></label>
+        <div class="two">
+          <label id="lblDept">Departamento<select name="dept" id="fDept"></select></label>
+          <label>Ciudad<input name="city" autocomplete="address-level2" required /></label>
+        </div>
+        <label>Dirección<input name="address" autocomplete="street-address" required placeholder="Calle, número, barrio, apto" /></label>
+        <label>Notas (opcional)<textarea name="notes" rows="2" placeholder="Color, referencia de la casa, etc."></textarea></label>
+        <p class="form-err" id="formErr" role="alert" hidden></p>
+      </div>
+      <div class="d-foot">
+        <div class="row total"><span>Total</span><b id="total2"></b></div>
+        <button class="btn primary block" id="submitOrder" type="submit">Confirmar pedido</button>
+        <p class="legal">Al confirmar aceptas que te contactemos para validar el pedido.</p>
+      </div>
+    </form>
+
+    <div class="d-view done" id="viewDone" hidden>
+      <div class="done-icon">✓</div>
+      <h3>¡Pedido recibido!</h3>
+      <p id="doneMsg"></p>
+      <button class="btn ghost" id="doneClose">Seguir comprando</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/cube.bundle.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
