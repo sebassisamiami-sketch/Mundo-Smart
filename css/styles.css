@@ -366,5 +366,26 @@ select option { background: #18181b; color: #fff; }
   .headline .w { transform: none; }
 }
 
+/* Carrusel de fotos en el modal */
+.m-media { display: block; padding: 0; }
+.carousel, .car-single { position: absolute; inset: 0; }
+.car-single { display: grid; place-items: center; background: #17171a; }
+.car-single img { width: 100%; height: 100%; object-fit: cover; position: static; }
+.car-single svg { width: 52%; height: auto; stroke: #fff; fill: none; stroke-width: 1.1; animation: floaty 5s ease-in-out infinite; }
+.car-track { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.car-track::-webkit-scrollbar { display: none; }
+.car-slide { flex: 0 0 100%; scroll-snap-align: center; display: grid; place-items: center; background: #17171a; }
+.car-slide img { width: 100%; height: 100%; object-fit: cover; position: static; inset: auto; }
+.car-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: #fff; font-size: 1.5rem; line-height: 1; display: grid; place-items: center; transition: background 0.2s, transform 0.2s; z-index: 2; }
+.car-nav:hover { background: rgba(0, 0, 0, 0.78); }
+.car-nav:active { transform: translateY(-50%) scale(0.92); }
+.car-prev { left: 10px; }
+.car-next { right: 10px; }
+.car-count { position: absolute; top: 12px; left: 12px; padding: 3px 9px; border-radius: 999px; background: rgba(0, 0, 0, 0.55); color: #fff; font-size: 0.75rem; z-index: 2; }
+.car-dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 2; }
+.car-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.45); transition: background 0.2s, transform 0.2s; }
+.car-dot.on { background: #fff; transform: scale(1.25); }
+.photo-count { position: absolute; bottom: 12px; right: 12px; z-index: 1; padding: 3px 8px; border-radius: 999px; background: rgba(0, 0, 0, 0.55); color: #fff; font-size: 0.72rem; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+
 /* Sin WebGL: fondo suave en lugar del cubo */
 .no-webgl body { background: radial-gradient(900px circle at 50% 20%, rgba(120, 160, 255, 0.14), transparent 60%), var(--bg); }

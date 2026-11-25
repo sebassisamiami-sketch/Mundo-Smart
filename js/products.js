@@ -35,6 +35,10 @@ window.PRODUCTS = [
     short: 'Audífonos inalámbricos compactos con buena autonomía.',
     price: 210000, was: 0,
     img: CDN + '98941/17023924001702392400dd2c8f25-cdda-4a9a-b695-f6882001183f_600x.jpeg',
+    imgs: [
+      CDN + '98941/17023924001702392400dd2c8f25-cdda-4a9a-b695-f6882001183f_600x.jpeg',
+      CDN + '98941/17023924001702392400f393e648-5099-495b-8d4b-f3e7db7900a4.jpeg',
+    ],
     icon: 'earbuds',
     features: ['Bluetooth estable', 'Diseño compacto', 'Estuche de carga', 'Control táctil'],
   },
@@ -75,6 +79,18 @@ window.PRODUCTS = [
     short: 'Cubo de carga compacto con salida USB-C.',
     price: 25990, was: 0,
     img: CDN + '1936562/17606468244.png',
+    imgs: [
+      CDN + '1936562/17606468244.png',
+      CDN + '1936562/176064682611.png',
+      CDN + '1936562/176064682613.png',
+      CDN + '1936562/17606468266.png',
+      CDN + '1936562/176064682610.png',
+      CDN + '1936562/17606468269.png',
+      CDN + '1936562/176064682614.png',
+      CDN + '1936562/17606468268.png',
+      CDN + '1936562/1760646824Fotos_mercado_libr%20(93).png',
+      CDN + '1936562/17606468241.png',
+    ],
     icon: 'charger',
     features: ['Salida USB-C', 'Tamaño compacto', 'Carga para celular', 'Buen precio'],
   },
@@ -110,9 +126,9 @@ window.PRODUCTS = [
 
   // ---------- CREADORES ----------
   {
-    // Nota: este no reapareció en el catálogo al re-buscar (orden aleatorio de Dropi).
-    // Queda con icono; cuando lo vuelvas a ver en Dropi, pégale la foto y el ID.
-    id: 'cre-aro16', dropiId: '', provider: 'SOLUCIONES SHOP', cat: 'creadores',
+    // Favoriteado en Dropi (ID 957884), pero su página de detalle no carga (parece
+    // inactivo en ese proveedor), por eso quedó con icono. Se puede reemplazar por otro aro.
+    id: 'cre-aro16', dropiId: '957884', provider: 'SOLUCIONES SHOP', cat: 'creadores',
     name: 'Aro de Luz 16 cm Profesional + Trípode', badge: '',
     short: 'Aro de luz con trípode para videos, fotos y videollamadas.',
     price: 75000, was: 0, img: '', icon: 'ring',
