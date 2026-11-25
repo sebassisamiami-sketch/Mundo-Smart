@@ -366,6 +366,21 @@ select option { background: #18181b; color: #fff; }
   .headline .w { transform: none; }
 }
 
+/* Selector de método de pago */
+.pay { display: grid; gap: 8px; }
+.pay-label { font-size: 0.82rem; color: var(--mut); }
+.pay-opts { display: grid; gap: 8px; }
+.pay-opt { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.pay-opt:hover { border-color: rgba(255, 255, 255, 0.3); }
+.pay-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pay-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--mut); flex: none; position: relative; transition: border-color 0.2s; }
+.pay-opt input:checked + .pay-dot { border-color: #fff; }
+.pay-opt input:checked + .pay-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
+.pay-txt { display: flex; flex-direction: column; gap: 1px; }
+.pay-txt b { font-weight: 500; font-size: 0.95rem; }
+.pay-txt small { color: var(--mut); font-size: 0.8rem; }
+.pay-opt:has(input:checked) { border-color: rgba(255, 255, 255, 0.55); background: rgba(255, 255, 255, 0.04); }
+
 /* Carrusel de fotos en el modal */
 .m-media { display: block; padding: 0; }
 .carousel, .car-single { position: absolute; inset: 0; }

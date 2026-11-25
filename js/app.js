@@ -383,8 +383,35 @@
     $('#countryHint').textContent = co
       ? 'Entrega estimada: ' + CFG.deliveryCO + '. Pago contra entrega disponible.'
       : 'Entrega estimada: ' + CFG.deliveryIntl + '. Te confirmamos el costo de envío y el método de pago por WhatsApp.';
+    renderPayments();
   }
   $('#fCountry').addEventListener('change', updateCountry);
+
+  /* ---------- Métodos de pago ---------- */
+  var PAY = CFG.payments || {};
+  function payMethodList() {
+    var list = [];
+    if (PAY.contraentrega !== false) list.push({ id: 'contraentrega', label: 'Pago contra entrega', desc: 'Pagas en efectivo al recibir tu pedido' });
+    if (PAY.epayco && PAY.epayco.enabled) list.push({ id: 'epayco', label: 'Tarjeta / PSE · ePayco', desc: 'Pago en línea seguro' });
+    if (PAY.wompi && PAY.wompi.enabled) list.push({ id: 'wompi', label: 'Tarjeta / PSE · Wompi', desc: 'Pago en línea seguro' });
+    if (PAY.mercadopago && PAY.mercadopago.enabled) list.push({ id: 'mercadopago', label: 'Mercado Pago', desc: 'Pago en línea seguro' });
+    return list;
+  }
+  function renderPayments() {
+    var box = $('#payMethods');
+    if (!countryCO()) { box.hidden = true; return; }
+    var methods = payMethodList();
+    box.hidden = false;
+    $('#payOpts').innerHTML = methods.map(function (m, i) {
+      return '<label class="pay-opt"><input type="radio" name="paym" value="' + m.id + '"' + (i === 0 ? ' checked' : '') + ' />' +
+        '<span class="pay-dot"></span><span class="pay-txt"><b>' + esc(m.label) + '</b><small>' + esc(m.desc) + '</small></span></label>';
+    }).join('');
+  }
+  function selectedPayment() {
+    if (!countryCO()) return 'por-confirmar';
+    var r = form.querySelector('input[name="paym"]:checked');
+    return r ? r.value : 'contraentrega';
+  }
 
   var form = $('#viewCheckout');
   form.addEventListener('submit', function (e) {
@@ -412,10 +439,12 @@
 
     var sub = subtotal();
     var ship = shipping(sub);
+    var method = selectedPayment();
     var order = {
+      ref: 'MS-' + Date.now().toString(36).toUpperCase(),
       createdAt: new Date().toISOString(),
       country: co ? 'CO' : 'OTHER',
-      payment: co ? 'contraentrega' : 'por-confirmar',
+      payment: method,
       customer: {
         name: f.name.value.trim(), phone: digits,
         department: co ? f.dept.value : '', city: f.city.value.trim(),
@@ -427,8 +456,74 @@
       }),
       subtotal: sub, shipping: ship, total: sub + ship, currency: CFG.currency,
     };
-    submit(order);
+    if (method === 'contraentrega' || method === 'por-confirmar') submit(order);
+    else payOnline(order);
   });
+
+  /* ---------- Pasarelas de pago en línea ---------- */
+  function loadScript(src, cb) {
+    if (document.querySelector('script[src="' + src + '"]')) return cb();
+    var s = document.createElement('script');
+    s.src = src; s.onload = function () { cb(); }; s.onerror = function () { cb('error'); };
+    document.head.appendChild(s);
+  }
+  // Deja el registro del pedido para el vendedor (con la dirección), aparte del cobro
+  function recordOrder(order) {
+    if (CFG.orderEndpoint) { try { fetch(CFG.orderEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) }); } catch (e) {} }
+    else if (waConfigured()) { try { window.open(waLink(waText(order)), '_blank', 'noopener'); } catch (e) {} }
+  }
+  function payOnline(order) {
+    if (order.payment === 'epayco') return payEpayco(order);
+    if (order.payment === 'wompi') return payWompi(order);
+    if (order.payment === 'mercadopago') return payMercadoPago(order);
+  }
+  function payEpayco(order) {
+    var cfg = PAY.epayco || {};
+    if (!cfg.publicKey) { toast('Falta tu llave pública de ePayco (js/config.js)'); return; }
+    loadScript('https://checkout.epayco.co/checkout.js', function (err) {
+      if (err || !window.ePayco) { toast('No se pudo cargar ePayco'); return; }
+      var handler = window.ePayco.checkout.configure({ key: cfg.publicKey, test: !!cfg.test });
+      handler.open({
+        name: CFG.storeName, description: 'Pedido ' + order.ref, invoice: order.ref,
+        currency: 'cop', amount: String(order.total), tax_base: '0', tax: '0', country: 'co', lang: 'es', external: 'false',
+        name_billing: order.customer.name, mobilephone_billing: order.customer.phone, address_billing: order.customer.address,
+        extra1: order.customer.city + ', ' + order.customer.department, extra2: order.customer.address, extra3: order.customer.notes,
+      });
+      recordOrder(order);
+      finish('Completa el pago en la ventana de ePayco. Te confirmaremos tu pedido.');
+    });
+  }
+  function payWompi(order) {
+    var cfg = PAY.wompi || {};
+    if (!cfg.publicKey || !cfg.signatureEndpoint) { toast('Wompi necesita tu llave pública y el backend de la firma'); return; }
+    var cents = Math.round(order.total * 100);
+    fetch(cfg.signatureEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: order.ref, amountInCents: cents, currency: 'COP' }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.signature) { toast('No se pudo generar la firma de Wompi'); return; }
+        loadScript('https://checkout.wompi.co/widget.js', function (err) {
+          if (err || !window.WidgetCheckout) { toast('No se pudo cargar Wompi'); return; }
+          var checkout = new window.WidgetCheckout({
+            currency: 'COP', amountInCents: cents, reference: order.ref, publicKey: cfg.publicKey,
+            signature: { integrity: d.signature },
+            customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone },
+          });
+          checkout.open(function () { recordOrder(order); finish('Gracias. Te confirmaremos tu pedido una vez validemos el pago.'); });
+        });
+      })
+      .catch(function () { toast('No se pudo iniciar Wompi'); });
+  }
+  function payMercadoPago(order) {
+    var cfg = PAY.mercadopago || {};
+    if (!cfg.preferenceEndpoint) { toast('Mercado Pago necesita tu backend de preferencias'); return; }
+    fetch(cfg.preferenceEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.init_point) { recordOrder(order); window.location.href = d.init_point; }
+        else toast('No se pudo crear el pago en Mercado Pago');
+      })
+      .catch(function () { toast('No se pudo iniciar Mercado Pago'); });
+  }
 
   function waText(o) {
     var lines = ['Hola, quiero hacer este pedido en ' + CFG.storeName + ':', ''];
@@ -438,7 +533,8 @@
     lines.push('Ubicación: ' + [o.customer.city, o.customer.department, o.country === 'CO' ? 'Colombia' : 'Otro país'].filter(Boolean).join(', '));
     lines.push('Dirección: ' + o.customer.address);
     if (o.customer.notes) lines.push('Notas: ' + o.customer.notes);
-    lines.push('Pago: ' + (o.country === 'CO' ? 'Contra entrega' : 'A confirmar'));
+    var payNames = { contraentrega: 'Contra entrega', epayco: 'Tarjeta/PSE (ePayco)', wompi: 'Tarjeta/PSE (Wompi)', mercadopago: 'Mercado Pago', 'por-confirmar': 'A confirmar' };
+    lines.push('Pedido: ' + o.ref, 'Pago: ' + (payNames[o.payment] || 'A confirmar'));
     return lines.join('\n');
   }
   function waLink(text) {

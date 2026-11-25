@@ -25,4 +25,37 @@ window.CONFIG = {
   // Cuánto tarda normalmente (se muestra al cliente)
   deliveryCO: '2 a 5 días hábiles',
   deliveryIntl: '10 a 25 días (según país y aduana)',
+
+  /*
+   * MÉTODOS DE PAGO
+   * El cliente elige uno en el checkout. "Contra entrega" funciona siempre.
+   * Para los pagos con tarjeta debes pegar TU llave PÚBLICA del proveedor
+   * (la sacas de tu panel de comercio). La llave pública es segura ponerla aquí.
+   * NUNCA pongas aquí llaves privadas/secretas: esas van en un backend.
+   */
+  payments: {
+    contraentrega: true, // pago al recibir (Colombia). Siempre disponible.
+
+    // ePayco: FUNCIONA solo con tu llave pública (no necesita backend obligatorio).
+    // Saca tu PUBLIC_KEY en: https://dashboard.epayco.co → Configuración → Llaves API.
+    epayco: {
+      enabled: false,       // ponlo en true cuando tengas la llave
+      publicKey: '',        // tu PUBLIC_KEY de ePayco
+      test: true,           // true = modo pruebas; false = cobra de verdad
+    },
+
+    // Wompi (Bancolombia): necesita un backend que genere la "firma de integridad".
+    // Pon tu llave pública y la URL de tu backend que devuelve la firma.
+    wompi: {
+      enabled: false,
+      publicKey: '',        // pub_prod_... o pub_test_...
+      signatureEndpoint: '', // URL de tu backend que devuelve { signature } (SHA256)
+    },
+
+    // Mercado Pago: necesita un backend que cree la "preferencia" y devuelva el init_point.
+    mercadopago: {
+      enabled: false,
+      preferenceEndpoint: '', // URL de tu backend que devuelve { init_point }
+    },
+  },
 };

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%230c0c0d%27/%3E%3Cpath d=%27M32 14l16 9v18l-16 9-16-9V23z%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="css/styles.css?v=3" />
+  <link rel="stylesheet" href="css/styles.css?v=4" />
 </head>
 <body>
   <canvas id="stage" aria-hidden="true"></canvas>
@@ -216,6 +216,10 @@
         </div>
         <label>Dirección<input name="address" autocomplete="street-address" required placeholder="Calle, número, barrio, apto" /></label>
         <label>Notas (opcional)<textarea name="notes" rows="2" placeholder="Color, referencia de la casa, etc."></textarea></label>
+        <div class="pay" id="payMethods" hidden>
+          <span class="pay-label">¿Cómo quieres pagar?</span>
+          <div class="pay-opts" id="payOpts"></div>
+        </div>
         <p class="form-err" id="formErr" role="alert" hidden></p>
       </div>
       <div class="d-foot">
@@ -235,9 +239,9 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/config.js?v=3"></script>
-  <script src="js/products.js?v=3"></script>
-  <script src="js/cube.bundle.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/config.js?v=4"></script>
+  <script src="js/products.js?v=4"></script>
+  <script src="js/cube.bundle.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>
