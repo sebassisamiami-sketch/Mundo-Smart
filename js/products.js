@@ -183,6 +183,33 @@ window.PRODUCTS = [
 
   // ---------- CREADORES ----------
   {
+    id: 'cre-mic3en1', dropiId: '1924491', provider: 'TV MARKET ONLINE', cat: 'creadores',
+    name: 'Micrófono Inalámbrico 3 en 1', badge: 'Top',
+    short: 'Micrófono de solapa inalámbrico con adaptadores para celular y cámara.',
+    price: 70000, was: 0,
+    img: CDN + '1924491/17577174891.jpeg',
+    icon: 'mic',
+    features: ['Inalámbrico', 'Compatible iPhone, USB-C y cámara', 'Reduce ruido', 'Ideal para videos'],
+  },
+  {
+    id: 'cre-micm10', dropiId: '2247301', provider: 'GEEKA MARKET', cat: 'creadores',
+    name: 'Micrófono Inalámbrico M10', badge: '',
+    short: 'Micrófono de mano inalámbrico, ideal para karaoke y presentaciones.',
+    price: 85000, was: 0,
+    img: CDN + '2247301/7a882aaf-b3c4-44b9-b2e4-31b3293bb659.png',
+    icon: 'mic',
+    features: ['Inalámbrico', 'Sonido claro', 'Para karaoke y eventos', 'Recargable'],
+  },
+  {
+    id: 'cre-micn8', dropiId: '2287302', provider: 'GM', cat: 'creadores',
+    name: 'Micrófono Inalámbrico Doble Neepho N8', badge: '',
+    short: 'Par de micrófonos de solapa inalámbricos para grabar con 2 personas.',
+    price: 41900, was: 0,
+    img: CDN + '2287302/img_6abeba9121c644.49588842_0.png',
+    icon: 'mic',
+    features: ['2 micrófonos', 'Inalámbricos', 'Para entrevistas y videos', 'Fácil de usar'],
+  },
+  {
     // Favoriteado en Dropi (ID 957884), pero su página de detalle no carga (parece
     // inactivo en ese proveedor), por eso quedó con icono. Se puede reemplazar por otro aro.
     id: 'cre-aro16', dropiId: '957884', provider: 'SOLUCIONES SHOP', cat: 'creadores',
@@ -212,4 +239,5 @@ window.ICONS = {
   speaker: '<rect x="14" y="6" width="20" height="36" rx="8"/><circle cx="24" cy="28" r="6"/><circle cx="24" cy="14" r="1.6"/>',
   bulb: '<path d="M24 6a12 12 0 0 0-6 22c1 1 2 3 2 5h8c0-2 1-4 2-5a12 12 0 0 0-6-22Z"/><path d="M20 38h8M21 42h6"/>',
   stand: '<rect x="15" y="6" width="18" height="28" rx="3"/><rect x="19" y="10" width="10" height="16" rx="1.5"/><path d="M24 34v5M16 42h16"/>',
+  mic: '<rect x="18" y="6" width="12" height="22" rx="6"/><path d="M14 22a10 10 0 0 0 20 0M24 32v8M18 42h12"/>',
 };
