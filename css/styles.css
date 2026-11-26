@@ -381,6 +381,27 @@ select option { background: #18181b; color: #fff; }
 .pay-txt small { color: var(--mut); font-size: 0.8rem; }
 .pay-opt:has(input:checked) { border-color: rgba(255, 255, 255, 0.55); background: rgba(255, 255, 255, 0.04); }
 
+/* Modal del widget de Wompi: pantalla completa y desplazable (si no, se corta el botón de pagar) */
+.waybox-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+.waybox-modal > iframe {
+  width: 100% !important;
+  max-width: 480px !important;
+  min-height: 100% !important;
+  height: auto !important;
+  border: 0 !important;
+}
+
 /* Carrusel de fotos en el modal */
 .m-media { display: block; padding: 0; }
 .carousel, .car-single { position: absolute; inset: 0; }

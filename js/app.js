@@ -510,6 +510,9 @@
               signature: { integrity: d.signature },
               customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone, phoneNumberPrefix: '+57' },
             });
+            // Liberar el scroll para que el modal de Wompi se pueda desplazar completo
+            document.body.classList.remove('lock');
+            document.body.style.overflow = '';
             checkout.open(function () {
               finish('¡Gracias! Para despachar tu pedido, envíanos tu dirección por WhatsApp con el botón de abajo.', { title: 'Pago recibido', waOrder: order });
             });
