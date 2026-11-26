@@ -8,12 +8,12 @@
  * la dan las reglas de Firestore y el login con Google (ver backend/firestore.rules).
  */
 window.FIREBASE_CONFIG = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
+  apiKey: 'AIzaSyAHbC8NpUKOcFw17Pu7IszM32UwiU_ZW8o',
+  authDomain: 'mundo-smart-tienda.firebaseapp.com',
+  projectId: 'mundo-smart-tienda',
+  storageBucket: 'mundo-smart-tienda.firebasestorage.app',
+  messagingSenderId: '77228336426',
+  appId: '1:77228336426:web:20e678323ca8db34bfea53',
 };
 
 // Único correo autorizado para entrar al panel de administración.
