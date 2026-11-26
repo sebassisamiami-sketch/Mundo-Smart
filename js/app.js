@@ -514,7 +514,7 @@
             document.body.classList.remove('lock');
             document.body.style.overflow = '';
             checkout.open(function () {
-              finish('¡Gracias! Para despachar tu pedido, envíanos tu dirección por WhatsApp con el botón de abajo.', { title: 'Pago recibido', waOrder: order });
+              finish('¡Gracias! Para despachar tu pedido, envíanos tu dirección por WhatsApp con el botón de abajo.', { title: 'Pago recibido', waOrder: order, order: order });
             });
           });
         })
@@ -525,7 +525,7 @@
     if (cfg.paymentLink) {
       window.open(cfg.paymentLink, '_blank', 'noopener');
       finish('Paga ' + fmt(order.total) + ' en la ventana de Wompi (tarjeta, Nequi o PSE). Después toca el botón de abajo para enviarnos tu dirección y despachar tu pedido.',
-        { title: 'Casi listo — paga en Wompi', waOrder: order });
+        { title: 'Casi listo — paga en Wompi', waOrder: order, order: order });
       return;
     }
     toast('Wompi necesita tu link de pagos, o tu llave pública y el Worker de la firma');
@@ -557,12 +557,21 @@
   function waLink(text) {
     return 'https://wa.me/' + CFG.whatsapp + (text ? '?text=' + encodeURIComponent(text) : '');
   }
+  var lastOrder = null;
+  var PAY_NAMES = { contraentrega: 'Contra entrega', epayco: 'Tarjeta/PSE (ePayco)', wompi: 'Tarjeta/PSE (Wompi)', mercadopago: 'Mercado Pago', 'por-confirmar': 'A confirmar' };
+
   function finish(msg, opts) {
     opts = opts || {};
     cart = []; persist(); renderCart();
     form.reset(); updateCountry();
     $('#doneTitle').textContent = opts.title || '¡Pedido recibido!';
     $('#doneMsg').textContent = msg;
+    // Recibo de compra (para todos los métodos)
+    lastOrder = opts.order || null;
+    var rec = $('#receipt'), dl = $('#downloadReceipt');
+    if (lastOrder) { rec.innerHTML = receiptHTML(lastOrder); rec.hidden = false; dl.hidden = false; }
+    else { rec.hidden = true; dl.hidden = true; }
+    // Botón de WhatsApp (pagos en línea, para enviar la dirección)
     var waBtn = $('#doneWa');
     if (opts.waOrder && waConfigured()) {
       waBtn.href = waLink(waText(opts.waOrder));
@@ -572,6 +581,83 @@
     }
     view('done');
   }
+
+  function receiptHTML(o) {
+    var fecha = new Date(o.createdAt).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
+    var items = o.items.map(function (i) {
+      return '<div class="r-item"><span>' + i.qty + '× ' + esc(i.name) + '</span><b>' + fmt(i.price * i.qty) + '</b></div>';
+    }).join('');
+    var dest = o.country === 'CO' ? esc(o.customer.address + ', ' + o.customer.city + (o.customer.department ? ', ' + o.customer.department : '')) : 'Envío internacional (a confirmar)';
+    return '<div class="r-head"><b>' + esc(CFG.storeName) + '</b><span>Recibo de compra</span></div>' +
+      '<div class="r-row"><span>N° de pedido</span><b>' + esc(o.ref) + '</b></div>' +
+      '<div class="r-row"><span>Fecha</span><span>' + esc(fecha) + '</span></div>' +
+      '<div class="r-items">' + items + '</div>' +
+      '<div class="r-row"><span>Subtotal</span><span>' + fmt(o.subtotal) + '</span></div>' +
+      '<div class="r-row"><span>Envío</span><span>' + (o.shipping ? fmt(o.shipping) : 'Gratis') + '</span></div>' +
+      '<div class="r-row r-total"><span>Total</span><b>' + fmt(o.total) + '</b></div>' +
+      '<div class="r-sep"></div>' +
+      '<div class="r-row"><span>Cliente</span><span>' + esc(o.customer.name) + '</span></div>' +
+      '<div class="r-row"><span>Celular</span><span>' + esc(o.customer.phone) + '</span></div>' +
+      '<div class="r-row"><span>Entrega</span><span>' + dest + '</span></div>' +
+      '<div class="r-row"><span>Pago</span><span>' + (PAY_NAMES[o.payment] || 'A confirmar') + '</span></div>';
+  }
+
+  // Descarga el recibo como imagen PNG dibujándolo en un canvas
+  function downloadReceipt() {
+    var o = lastOrder;
+    if (!o) return;
+    var W = 660, pad = 44, line = 36;
+    var rows = [];
+    rows.push(['title', CFG.storeName]);
+    rows.push(['sub', 'Recibo de compra']);
+    rows.push(['gap']);
+    rows.push(['kv', 'N° de pedido', o.ref]);
+    rows.push(['kv', 'Fecha', new Date(o.createdAt).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })]);
+    rows.push(['sep']);
+    o.items.forEach(function (i) {
+      var n = (i.qty + '× ' + i.name);
+      if (n.length > 40) n = n.slice(0, 39) + '…';
+      rows.push(['item', n, fmt(i.price * i.qty)]);
+    });
+    rows.push(['sep']);
+    rows.push(['kv', 'Subtotal', fmt(o.subtotal)]);
+    rows.push(['kv', 'Envío', o.shipping ? fmt(o.shipping) : 'Gratis']);
+    rows.push(['total', 'Total', fmt(o.total)]);
+    rows.push(['sep']);
+    rows.push(['kv', 'Cliente', (o.customer.name || '').slice(0, 34)]);
+    rows.push(['kv', 'Celular', o.customer.phone]);
+    rows.push(['kv', 'Ciudad', o.country === 'CO' ? o.customer.city : 'Internacional']);
+    rows.push(['kv', 'Pago', PAY_NAMES[o.payment] || 'A confirmar']);
+    rows.push(['gap']);
+    rows.push(['sub', '¡Gracias por tu compra!']);
+
+    var H = pad * 2 + rows.length * line;
+    var scale = 2;
+    var c = document.createElement('canvas');
+    c.width = W * scale; c.height = H * scale;
+    var g = c.getContext('2d');
+    g.scale(scale, scale);
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+    g.textBaseline = 'middle';
+    var y = pad;
+    rows.forEach(function (r) {
+      if (r[0] === 'title') { g.fillStyle = '#0c0c0d'; g.font = '600 30px Inter, Arial, sans-serif'; g.textAlign = 'center'; g.fillText(r[1], W / 2, y + 4); y += line + 6; }
+      else if (r[0] === 'sub') { g.fillStyle = '#777'; g.font = '400 18px Inter, Arial, sans-serif'; g.textAlign = 'center'; g.fillText(r[1], W / 2, y); y += line; }
+      else if (r[0] === 'gap') { y += line * 0.5; }
+      else if (r[0] === 'sep') { g.strokeStyle = '#e6e6e6'; g.lineWidth = 1; g.beginPath(); g.moveTo(pad, y); g.lineTo(W - pad, y); g.stroke(); y += line * 0.6; }
+      else { var bold = r[0] === 'total'; g.fillStyle = bold ? '#0c0c0d' : '#333'; g.font = (bold ? '600 ' : '400 ') + (bold ? '22px' : '18px') + ' Inter, Arial, sans-serif'; g.textAlign = 'left'; g.fillText(r[1], pad, y); g.textAlign = 'right'; g.fillStyle = bold ? '#0c0c0d' : '#111'; g.fillText(r[2], W - pad, y); y += line; }
+    });
+    c.toBlob(function (blob) {
+      if (!blob) { toast('No se pudo generar el recibo'); return; }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'recibo-' + o.ref + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      toast('Recibo descargado');
+    }, 'image/png');
+  }
+  $('#downloadReceipt').addEventListener('click', downloadReceipt);
   function waConfigured() { return /^\d{10,15}$/.test(CFG.whatsapp); }
 
   function submit(order) {
@@ -586,7 +672,7 @@
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json().catch(function () { return {}; }); })
         .then(function () {
           restore();
-          finish('Recibimos tu pedido. Te contactaremos por WhatsApp para confirmarlo.');
+          finish('Recibimos tu pedido. Te contactaremos por WhatsApp para confirmarlo.', { order: order });
         })
         .catch(function () {
           restore();
@@ -604,7 +690,7 @@
       return;
     }
     window.open(waLink(waText(order)), '_blank', 'noopener');
-    finish('Se abrió WhatsApp con tu pedido. Envía el mensaje para que lo confirmemos.');
+    finish('Se abrió WhatsApp con tu pedido. Envía el mensaje para que lo confirmemos.', { order: order });
   }
 
   /* ---------- Varios ---------- */

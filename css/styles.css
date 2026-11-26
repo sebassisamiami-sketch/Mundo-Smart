@@ -381,6 +381,20 @@ select option { background: #18181b; color: #fff; }
 .pay-txt small { color: var(--mut); font-size: 0.8rem; }
 .pay-opt:has(input:checked) { border-color: rgba(255, 255, 255, 0.55); background: rgba(255, 255, 255, 0.04); }
 
+/* Recibo de compra en la pantalla de confirmación */
+.receipt { text-align: left; width: 100%; max-width: 420px; margin: 4px auto 2px; padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); display: grid; gap: 7px; }
+.r-head { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-bottom: 8px; text-align: center; }
+.r-head b { font-size: 1.1rem; }
+.r-head span { color: var(--mut); font-size: 0.8rem; }
+.r-row { display: flex; justify-content: space-between; gap: 14px; font-size: 0.87rem; color: var(--mut); }
+.r-row > span:last-child, .r-row b { color: var(--txt); text-align: right; }
+.r-items { display: grid; gap: 6px; padding: 10px 0; margin: 6px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.r-item { display: flex; justify-content: space-between; gap: 14px; font-size: 0.87rem; }
+.r-item span { color: var(--txt); }
+.r-item b { color: var(--txt); white-space: nowrap; font-weight: 500; }
+.r-total { font-size: 1.05rem; color: var(--txt); padding-top: 2px; }
+.r-sep { height: 1px; background: var(--line); margin: 4px 0; }
+
 /* Modal del widget de Wompi: pantalla completa y desplazable (si no, se corta el botón de pagar) */
 .waybox-modal {
   position: fixed !important;
