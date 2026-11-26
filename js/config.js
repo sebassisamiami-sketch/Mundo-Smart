@@ -44,12 +44,17 @@ window.CONFIG = {
       test: true,           // true = modo pruebas; false = cobra de verdad
     },
 
-    // Wompi (Bancolombia): necesita un backend que genere la "firma de integridad".
-    // Pon tu llave pública y la URL de tu backend que devuelve la firma.
+    // Wompi (Bancolombia).
     wompi: {
-      enabled: false,
-      publicKey: '',        // pub_prod_... o pub_test_...
-      signatureEndpoint: '', // URL de tu backend que devuelve { signature } (SHA256)
+      enabled: true,
+      // MODO FÁCIL (sin backend): tu "link de pagos" de Wompi. Acepta tarjetas, Nequi y PSE.
+      // El cliente paga el total en la página segura de Wompi.
+      // Lo sacas en tu panel de Wompi → "Comparte tu link de pagos".
+      paymentLink: 'https://checkout.wompi.co/l/VPOS_HwRmKl',
+      // MODO AVANZADO (opcional): cobra el monto exacto automático con el widget.
+      // Requiere un backend que genere la firma de integridad. Déjalo vacío si usas el link.
+      publicKey: '',
+      signatureEndpoint: '',
     },
 
     // Mercado Pago: necesita un backend que cree la "preferencia" y devuelva el init_point.

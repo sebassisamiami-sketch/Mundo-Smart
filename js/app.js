@@ -495,7 +495,15 @@
   }
   function payWompi(order) {
     var cfg = PAY.wompi || {};
-    if (!cfg.publicKey || !cfg.signatureEndpoint) { toast('Wompi necesita tu llave pública y el backend de la firma'); return; }
+    // Modo fácil: link de pagos de Wompi (sin backend). El cliente paga el total allí.
+    if (cfg.paymentLink) {
+      recordOrder(order);
+      window.open(cfg.paymentLink, '_blank', 'noopener');
+      finish('Te abrimos Wompi para pagar ' + fmt(order.total) + '. Escribe ese valor exacto y completa el pago — ya recibimos los datos de tu pedido.');
+      return;
+    }
+    // Modo avanzado: widget con firma (requiere backend)
+    if (!cfg.publicKey || !cfg.signatureEndpoint) { toast('Wompi necesita tu link de pagos, o tu llave pública y el backend de la firma'); return; }
     var cents = Math.round(order.total * 100);
     fetch(cfg.signatureEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: order.ref, amountInCents: cents, currency: 'COP' }) })
       .then(function (r) { return r.json(); })
