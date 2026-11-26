@@ -495,31 +495,37 @@
   }
   function payWompi(order) {
     var cfg = PAY.wompi || {};
-    // Modo fácil: link de pagos de Wompi (sin backend). El cliente paga el total allí.
+    // MODO EXACTO (con backend): si hay llave pública + Worker de firma, el monto
+    // sale automático y exacto, sin que el cliente lo escriba. Tiene prioridad.
+    if (cfg.publicKey && cfg.signatureEndpoint) {
+      var cents = Math.round(order.total * 100);
+      fetch(cfg.signatureEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: order.ref, amountInCents: cents, currency: 'COP' }) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.signature) { toast('No se pudo generar la firma de Wompi'); return; }
+          loadScript('https://checkout.wompi.co/widget.js', function (err) {
+            if (err || !window.WidgetCheckout) { toast('No se pudo cargar Wompi'); return; }
+            var checkout = new window.WidgetCheckout({
+              currency: 'COP', amountInCents: cents, reference: order.ref, publicKey: cfg.publicKey,
+              signature: { integrity: d.signature },
+              customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone },
+            });
+            checkout.open(function () {
+              finish('¡Gracias! Para despachar tu pedido, envíanos tu dirección por WhatsApp con el botón de abajo.', { title: 'Pago recibido', waOrder: order });
+            });
+          });
+        })
+        .catch(function () { toast('No se pudo iniciar Wompi'); });
+      return;
+    }
+    // MODO FÁCIL (sin backend): link de pagos. El cliente escribe el total en Wompi.
     if (cfg.paymentLink) {
       window.open(cfg.paymentLink, '_blank', 'noopener');
       finish('Paga ' + fmt(order.total) + ' en la ventana de Wompi (tarjeta, Nequi o PSE). Después toca el botón de abajo para enviarnos tu dirección y despachar tu pedido.',
         { title: 'Casi listo — paga en Wompi', waOrder: order });
       return;
     }
-    // Modo avanzado: widget con firma (requiere backend)
-    if (!cfg.publicKey || !cfg.signatureEndpoint) { toast('Wompi necesita tu link de pagos, o tu llave pública y el backend de la firma'); return; }
-    var cents = Math.round(order.total * 100);
-    fetch(cfg.signatureEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: order.ref, amountInCents: cents, currency: 'COP' }) })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d || !d.signature) { toast('No se pudo generar la firma de Wompi'); return; }
-        loadScript('https://checkout.wompi.co/widget.js', function (err) {
-          if (err || !window.WidgetCheckout) { toast('No se pudo cargar Wompi'); return; }
-          var checkout = new window.WidgetCheckout({
-            currency: 'COP', amountInCents: cents, reference: order.ref, publicKey: cfg.publicKey,
-            signature: { integrity: d.signature },
-            customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone },
-          });
-          checkout.open(function () { recordOrder(order); finish('Gracias. Te confirmaremos tu pedido una vez validemos el pago.'); });
-        });
-      })
-      .catch(function () { toast('No se pudo iniciar Wompi'); });
+    toast('Wompi necesita tu link de pagos, o tu llave pública y el Worker de la firma');
   }
   function payMercadoPago(order) {
     var cfg = PAY.mercadopago || {};
