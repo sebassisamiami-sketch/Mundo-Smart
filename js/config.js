@@ -5,7 +5,7 @@ window.CONFIG = {
   storeName: 'Mundo Smart',
 
   // Tu WhatsApp con indicativo de país y sin "+" ni espacios. Ej: 573001234567
-  whatsapp: '57XXXXXXXXXX',
+  whatsapp: '573112350585',
 
   currency: 'COP',
 
