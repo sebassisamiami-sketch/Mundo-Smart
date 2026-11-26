@@ -456,6 +456,17 @@
       }),
       subtotal: sub, shipping: ship, total: sub + ship, currency: CFG.currency,
     };
+    // Registra el intento de carrito (para el panel). Si se completa, se marca luego.
+    pendingAttemptId = null;
+    if (window.DB) {
+      Promise.resolve(DB.logAttempt({
+        ref: order.ref, items: order.items, total: order.total,
+        subtotal: order.subtotal, shipping: order.shipping,
+        payment: order.payment, country: order.country,
+        customer: { name: order.customer.name, phone: order.customer.phone,
+                    city: order.customer.city },
+      })).then(function (id) { pendingAttemptId = id; });
+    }
     if (method === 'contraentrega' || method === 'por-confirmar') submit(order);
     else payOnline(order);
   });
@@ -558,6 +569,7 @@
     return 'https://wa.me/' + CFG.whatsapp + (text ? '?text=' + encodeURIComponent(text) : '');
   }
   var lastOrder = null;
+  var pendingAttemptId = null;
   var PAY_NAMES = { contraentrega: 'Contra entrega', epayco: 'Tarjeta/PSE (ePayco)', wompi: 'Tarjeta/PSE (Wompi)', mercadopago: 'Mercado Pago', 'por-confirmar': 'A confirmar' };
 
   function finish(msg, opts) {
@@ -571,6 +583,11 @@
     var rec = $('#receipt'), dl = $('#downloadReceipt');
     if (lastOrder) { rec.innerHTML = receiptHTML(lastOrder); rec.hidden = false; dl.hidden = false; }
     else { rec.hidden = true; dl.hidden = true; }
+    // Guarda el pedido en el panel y marca el intento como completado
+    if (lastOrder && window.DB) {
+      DB.saveOrder(lastOrder);
+      if (pendingAttemptId) { DB.completeAttempt(pendingAttemptId, lastOrder.ref); pendingAttemptId = null; }
+    }
     // Botón de WhatsApp (pagos en línea, para enviar la dirección)
     var waBtn = $('#doneWa');
     if (opts.waOrder && waConfigured()) {
