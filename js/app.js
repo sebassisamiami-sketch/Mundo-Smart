@@ -508,7 +508,7 @@
             var checkout = new window.WidgetCheckout({
               currency: 'COP', amountInCents: cents, reference: order.ref, publicKey: cfg.publicKey,
               signature: { integrity: d.signature },
-              customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone },
+              customerData: { fullName: order.customer.name, phoneNumber: order.customer.phone, phoneNumberPrefix: '+57' },
             });
             checkout.open(function () {
               finish('¡Gracias! Para despachar tu pedido, envíanos tu dirección por WhatsApp con el botón de abajo.', { title: 'Pago recibido', waOrder: order });
