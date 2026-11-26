@@ -51,10 +51,9 @@ window.CONFIG = {
       // El cliente paga el total en la página segura de Wompi.
       // Lo sacas en tu panel de Wompi → "Comparte tu link de pagos".
       paymentLink: 'https://checkout.wompi.co/l/VPOS_HwRmKl',
-      // MODO AVANZADO (opcional): cobra el monto exacto automático con el widget.
-      // Requiere un backend que genere la firma de integridad. Déjalo vacío si usas el link.
-      publicKey: '',
-      signatureEndpoint: '',
+      // MODO EXACTO (activo): cobra el monto exacto automático con el widget + Worker de firma.
+      publicKey: 'pub_prod_20s3b6HtkDjOBj27ga53lQ8PwmU9hwpQ',
+      signatureEndpoint: 'https://wompi-firma.dev-sisa2026.workers.dev',
     },
 
     // Mercado Pago: necesita un backend que cree la "preferencia" y devuelva el init_point.
