@@ -497,9 +497,9 @@
     var cfg = PAY.wompi || {};
     // Modo fácil: link de pagos de Wompi (sin backend). El cliente paga el total allí.
     if (cfg.paymentLink) {
-      recordOrder(order);
       window.open(cfg.paymentLink, '_blank', 'noopener');
-      finish('Te abrimos Wompi para pagar ' + fmt(order.total) + '. Escribe ese valor exacto y completa el pago — ya recibimos los datos de tu pedido.');
+      finish('Paga ' + fmt(order.total) + ' en la ventana de Wompi (tarjeta, Nequi o PSE). Después toca el botón de abajo para enviarnos tu dirección y despachar tu pedido.',
+        { title: 'Casi listo — paga en Wompi', waOrder: order });
       return;
     }
     // Modo avanzado: widget con firma (requiere backend)
@@ -548,10 +548,19 @@
   function waLink(text) {
     return 'https://wa.me/' + CFG.whatsapp + (text ? '?text=' + encodeURIComponent(text) : '');
   }
-  function finish(msg) {
+  function finish(msg, opts) {
+    opts = opts || {};
     cart = []; persist(); renderCart();
     form.reset(); updateCountry();
+    $('#doneTitle').textContent = opts.title || '¡Pedido recibido!';
     $('#doneMsg').textContent = msg;
+    var waBtn = $('#doneWa');
+    if (opts.waOrder && waConfigured()) {
+      waBtn.href = waLink(waText(opts.waOrder));
+      waBtn.hidden = false;
+    } else {
+      waBtn.hidden = true;
+    }
     view('done');
   }
   function waConfigured() { return /^\d{10,15}$/.test(CFG.whatsapp); }
