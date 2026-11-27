@@ -1,11 +1,12 @@
 /*
  * Catálogo REAL de Mundo Smart — productos tomados de tu catálogo de Dropi,
- * con el precio sugerido de Dropi y la foto + ID reales de cada producto (25 nov 2026).
+ * con el precio sugerido de Dropi y las fotos reales de la galería de cada producto.
  *
  *  id       identificador interno único
  *  dropiId  ID del producto en Dropi (sirve para crear/enlazar el pedido con Dropi)
  *  provider proveedor en Dropi (a quién le pides cuando entre una venta)
- *  img      foto real del producto (tomada del catálogo de Dropi)
+ *  img      foto principal (primera de la galería)
+ *  imgs     galería completa (carrusel) — fotos reales tomadas de Dropi
  *  price    precio de venta (precio sugerido de Dropi, COP)
  */
 var CDN = 'https://d39ru7awumhhs2.cloudfront.net/colombia/products/';
@@ -27,6 +28,13 @@ window.PRODUCTS = [
     short: 'Audífonos inalámbricos con estuche de carga y manos libres.',
     price: 70000, was: 0,
     img: CDN + '2176960/1781543171D_NQ_NP_2X_881481-MCO94059063959_102025-F.webp',
+    imgs: [
+      CDN + '2176960/1781543171D_NQ_NP_2X_881481-MCO94059063959_102025-F.webp',
+      CDN + '2176960/1781543171D_NQ_NP_2X_639120-MCO94054912181_102025-F.webp',
+      CDN + '2176960/1781543171D_NQ_NP_2X_963746-MCO93634177514_102025-F.webp',
+      CDN + '2176960/1781543171D_NQ_NP_2X_676081-MCO93634179458_102025-F.webp',
+      CDN + '2176960/1781543171D_NQ_NP_2X_892103-MCO94054972281_102025-F.webp',
+    ],
     icon: 'earbuds',
     features: ['Conexión Bluetooth', 'Estuche de carga', 'Manos libres para llamadas', 'Uso diario'],
   },
@@ -45,10 +53,16 @@ window.PRODUCTS = [
   },
   {
     id: 'aud-jk18', dropiId: '2098504', provider: 'TU CLICK', cat: 'audio',
-    name: 'Audífonos Inalámbricos JKMX JK18', badge: '',
+    name: 'Audífonos Inalámbricos JKMX JK100', badge: '',
     short: 'Opción económica de audífonos inalámbricos para el día a día.',
     price: 39000, was: 0,
     img: CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082359.png',
+    imgs: [
+      CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082359.png',
+      CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082419.png',
+      CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082425.png',
+      CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082414.png',
+    ],
     icon: 'earbuds',
     features: ['Bluetooth', 'Varios colores', 'Estuche de carga', 'Precio económico'],
   },
@@ -58,6 +72,11 @@ window.PRODUCTS = [
     short: 'Parlante Bluetooth portátil de 10W con buen sonido para fiestas.',
     price: 89900, was: 0,
     img: CDN + '2072830/1770044704D_NQ_NP_2X_961308-MLA96871386825_102025-F.jpg',
+    imgs: [
+      CDN + '2072830/1770044704D_NQ_NP_2X_961308-MLA96871386825_102025-F.jpg',
+      CDN + '2072830/1770044704D_NQ_NP_2X_761303-MLA93157379858_092025-F.jpg',
+      CDN + '2072830/1770044704D_NQ_NP_2X_985124-MLA93573978267_092025-F.jpg',
+    ],
     icon: 'speaker',
     features: ['Bluetooth', '10W de potencia', 'Portátil y recargable', 'Buen bajo'],
   },
@@ -78,6 +97,11 @@ window.PRODUCTS = [
     short: 'Smartwatch con correas intercambiables, tipo combo completo.',
     price: 150000, was: 0,
     img: CDN + '2139907/1777345763535525954_1156308939877523_6977859766172269091_n.jpg',
+    imgs: [
+      CDN + '2139907/1777345763535525954_1156308939877523_6977859766172269091_n.jpg',
+      CDN + '2139907/1777345765534496243_1156308999877517_3018157657121597574_n.jpg',
+      CDN + '2139907/1777345763536173144_1156309066544177_7477905725678914444_n.jpg',
+    ],
     icon: 'watch',
     features: ['Correas intercambiables', 'Notificaciones', 'Monitor de salud', 'Combo completo'],
   },
@@ -105,6 +129,8 @@ window.PRODUCTS = [
     features: ['Salida USB-C', 'Tamaño compacto', 'Carga para celular', 'Buen precio'],
   },
   {
+    // ⚠️ REVISAR: el ID 2242225 en Dropi corresponde a "Parlante NanoTec 1178",
+    // NO a un cargador de carro. Falta el ID correcto del cargador Nanotec.
     id: 'car-nanotec', dropiId: '2242225', provider: 'LIAMU TECH', cat: 'carga',
     name: 'Cargador de Carro Nanotec', badge: '',
     short: 'Cargador para el carro con varios puertos y luces LED.',
@@ -121,10 +147,18 @@ window.PRODUCTS = [
     short: 'Cámara de seguridad wifi con giro 360° que ves desde el celular.',
     price: 100000, was: 0,
     img: CDN + '1518912/1732303158D_NQ_NP_2X_903285-MCO77120009474_062024-F.webp',
+    imgs: [
+      CDN + '1518912/1732303158D_NQ_NP_2X_903285-MCO77120009474_062024-F.webp',
+      CDN + '1518912/1732303159D_NQ_NP_2X_750183-MCO77120317498_062024-F.webp',
+      CDN + '1518912/1732303158D_NQ_NP_2X_844182-MCO77332504601_062024-F.webp',
+      CDN + '1518912/1732303158D_NQ_NP_2X_930144-MCO77120009514_062024-F.webp',
+    ],
     icon: 'camera',
     features: ['Giro 360°', 'Control por app', 'Visión nocturna', 'Audio de dos vías'],
   },
   {
+    // ⚠️ REVISAR: el ID 2133668 en Dropi corresponde a "Tapón Protector Bajo Puerta",
+    // NO a una cámara TP-Link Tapo. Falta el ID correcto de la cámara Tapo.
     id: 'hog-tapo', dropiId: '2133668', provider: 'GRUPO CONTROL', cat: 'hogar',
     name: 'Cámara Wifi TP-Link Tapo', badge: '',
     short: 'Cámara wifi marca TP-Link que ves y controlas desde el celular.',
@@ -139,6 +173,12 @@ window.PRODUCTS = [
     short: 'Bombillo LED RGB con parlante Bluetooth integrado y control remoto.',
     price: 40000, was: 0,
     img: CDN + '1987268/1762469417bombillo%20%20parlante1.png',
+    imgs: [
+      CDN + '1987268/1762469417bombillo%20%20parlante1.png',
+      CDN + '1987268/1762469417bombillo%20%20parlante.png',
+      CDN + '1987268/1762469417bombillo%20bluetooth5.png',
+      CDN + '1987268/1762469417bombillo%20%20parlante2.png',
+    ],
     icon: 'bulb',
     features: ['Luz RGB de colores', 'Parlante Bluetooth integrado', 'Control remoto', 'Fácil instalación'],
   },
@@ -150,6 +190,12 @@ window.PRODUCTS = [
     short: 'Trípode flexible que se adapta a cualquier superficie para grabar o ver videos.',
     price: 55000, was: 0,
     img: CDN + '2180548/17818328551qal%C3%B1%7B.jpg',
+    imgs: [
+      CDN + '2180548/17818328551qal%C3%B1%7B.jpg',
+      CDN + '2180548/1781832855seb777.jpg',
+      CDN + '2180548/1781832855sbm953r.jpg',
+      CDN + '2180548/1781832855azw2222.jpg',
+    ],
     icon: 'stand',
     features: ['Patas flexibles', 'Se agarra a cualquier superficie', 'Soporte universal', 'Ligero'],
   },
@@ -159,6 +205,13 @@ window.PRODUCTS = [
     short: 'Soporte de cuello manos libres para ver videos cómodamente.',
     price: 35000, was: 0,
     img: CDN + '2032917/176789187541vnAsmmQpL._AC_.jpg',
+    imgs: [
+      CDN + '2032917/176789187541vnAsmmQpL._AC_.jpg',
+      CDN + '2032917/1767891876soporte%20cuello%201.png',
+      CDN + '2032917/1767891876soporte%20cuello%203.png',
+      CDN + '2032917/1767891876soporte%20cuello%20rosa1.png',
+      CDN + '2032917/1767891876soporte%20cuello%202.png',
+    ],
     icon: 'stand',
     features: ['Manos libres', 'Flexible y ajustable', 'Cómodo para el cuello', 'Varios colores'],
   },
@@ -168,6 +221,11 @@ window.PRODUCTS = [
     short: 'Soporte para el carro con ventosa, giro 360° y agarre firme.',
     price: 29000, was: 0,
     img: CDN + '1734191/1743090360D_NQ_NP_856602-MLA82567556169_022025-O.png',
+    imgs: [
+      CDN + '1734191/1743090360D_NQ_NP_856602-MLA82567556169_022025-O.png',
+      CDN + '1734191/1743090360D_NQ_NP_988218-MLA79477430548_102024-O.png',
+      CDN + '1734191/1743090360D_NQ_NP_875138-MLA79723754621_102024-O.png',
+    ],
     icon: 'stand',
     features: ['Ventosa fuerte', 'Giro 360°', 'Para el panel o vidrio', 'Agarre firme'],
   },
@@ -177,6 +235,11 @@ window.PRODUCTS = [
     short: 'Soporte de carro compatible con todas las referencias de celular.',
     price: 23000, was: 0,
     img: CDN + '844494/1715220505PP1.jpg',
+    imgs: [
+      CDN + '844494/1715220505PP1.jpg',
+      CDN + '844494/1715220505PP2.jpg',
+      CDN + '844494/1715220505PP3.jpg',
+    ],
     icon: 'stand',
     features: ['Universal', 'Instalación fácil', 'Agarre seguro', 'Buen precio'],
   },
@@ -188,6 +251,14 @@ window.PRODUCTS = [
     short: 'Micrófono de solapa inalámbrico con adaptadores para celular y cámara.',
     price: 70000, was: 0,
     img: CDN + '1924491/17577174891.jpeg',
+    imgs: [
+      CDN + '1924491/17577174891.jpeg',
+      CDN + '1924491/17577174893.jpeg',
+      CDN + '1924491/17577174894.jpeg',
+      CDN + '1924491/17577174896.jpeg',
+      CDN + '1924491/17577174895.jpeg',
+      CDN + '1924491/17577174892.jpeg',
+    ],
     icon: 'mic',
     features: ['Inalámbrico', 'Compatible iPhone, USB-C y cámara', 'Reduce ruido', 'Ideal para videos'],
   },
@@ -197,6 +268,14 @@ window.PRODUCTS = [
     short: 'Micrófono de mano inalámbrico, ideal para karaoke y presentaciones.',
     price: 85000, was: 0,
     img: CDN + '2247301/7a882aaf-b3c4-44b9-b2e4-31b3293bb659.png',
+    imgs: [
+      CDN + '2247301/7a882aaf-b3c4-44b9-b2e4-31b3293bb659.png',
+      CDN + '2247301/a1367d65-4fa1-4b6a-a09e-0f2032a27cf1.png',
+      CDN + '2247301/3d455710-71c6-45f0-9582-8a399bab9e35.png',
+      CDN + '2247301/e17e0d97-d0bd-4d6f-8e71-be51e47ce145.png',
+      CDN + '2247301/d9dd0d9a-d95c-4f2c-9df8-e650640df5fa.png',
+      CDN + '2247301/66ac2d39-c93f-4a7b-a04d-34799819b18d.png',
+    ],
     icon: 'mic',
     features: ['Inalámbrico', 'Sonido claro', 'Para karaoke y eventos', 'Recargable'],
   },
@@ -210,12 +289,17 @@ window.PRODUCTS = [
     features: ['2 micrófonos', 'Inalámbricos', 'Para entrevistas y videos', 'Fácil de usar'],
   },
   {
-    // Favoriteado en Dropi (ID 957884), pero su página de detalle no carga (parece
-    // inactivo en ese proveedor), por eso quedó con icono. Se puede reemplazar por otro aro.
     id: 'cre-aro16', dropiId: '957884', provider: 'SOLUCIONES SHOP', cat: 'creadores',
     name: 'Aro de Luz 16 cm Profesional + Trípode', badge: '',
     short: 'Aro de luz con trípode para videos, fotos y videollamadas.',
-    price: 75000, was: 0, img: '', icon: 'ring',
+    price: 75000, was: 0,
+    img: CDN + '957884/17205525372d777a2c-6415-44a0-a736-de05eeaddcc6.jpeg',
+    imgs: [
+      CDN + '957884/17205525372d777a2c-6415-44a0-a736-de05eeaddcc6.jpeg',
+      CDN + '957884/1720552537c2df967f-9b91-40ca-b2c9-b0ad1f817fcf.jpeg',
+      CDN + '957884/17205525373342a45a-5b35-4996-85ce-2659a9390330.jpeg',
+    ],
+    icon: 'ring',
     features: ['16 cm de diámetro', 'Trípode incluido', 'Brillo regulable', 'Soporte de celular'],
   },
   {
@@ -224,6 +308,11 @@ window.PRODUCTS = [
     short: 'Aro de luz RGB grande con trípode, ideal para creadores de contenido.',
     price: 80000, was: 0,
     img: CDN + '2336620/img_6af4d20605ee34.82169658_0.jpg',
+    imgs: [
+      CDN + '2336620/img_6af4d20605ee34.82169658_0.jpg',
+      CDN + '2336620/img_6af4d2065ebeb5.92510977_2.jpg',
+      CDN + '2336620/img_6af4d206335e22.40158875_1.jpg',
+    ],
     icon: 'ring',
     features: ['Luz RGB de colores', '26 cm de diámetro', 'Trípode extensible', 'Control de brillo'],
   },
