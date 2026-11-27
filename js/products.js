@@ -26,7 +26,7 @@ window.PRODUCTS = [
     id: 'aud-ambie', dropiId: '2176960', provider: 'ASTRID', cat: 'audio',
     name: 'Audífonos Ambie Sound Earcu', badge: 'Top',
     short: 'Audífonos inalámbricos con estuche de carga y manos libres.',
-    price: 70000, was: 0,
+    price: 80000, was: 0,
     img: CDN + '2176960/1781543171D_NQ_NP_2X_881481-MCO94059063959_102025-F.webp',
     imgs: [
       CDN + '2176960/1781543171D_NQ_NP_2X_881481-MCO94059063959_102025-F.webp',
@@ -55,7 +55,7 @@ window.PRODUCTS = [
     id: 'aud-jk18', dropiId: '2098504', provider: 'TU CLICK', cat: 'audio',
     name: 'Audífonos Inalámbricos JKMX JK100', badge: '',
     short: 'Opción económica de audífonos inalámbricos para el día a día.',
-    price: 39000, was: 0,
+    price: 49000, was: 0,
     img: CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082359.png',
     imgs: [
       CDN + '2098504/1772547935Captura%20de%20pantalla%202026-03-03%20082359.png',
@@ -70,7 +70,7 @@ window.PRODUCTS = [
     id: 'aud-movisun', dropiId: '2072830', provider: 'MOVISUN', cat: 'audio',
     name: 'Parlante Bluetooth Movisun Glumax 10W', badge: '',
     short: 'Parlante Bluetooth portátil de 10W con buen sonido para fiestas.',
-    price: 89900, was: 0,
+    price: 99900, was: 0,
     img: CDN + '2072830/1770044704D_NQ_NP_2X_961308-MLA96871386825_102025-F.jpg',
     imgs: [
       CDN + '2072830/1770044704D_NQ_NP_2X_961308-MLA96871386825_102025-F.jpg',
@@ -86,7 +86,7 @@ window.PRODUCTS = [
     id: 'wea-t500', dropiId: '1628933', provider: 'AARON IMPORTACIONES', cat: 'wearables',
     name: 'Smartwatch T500 Doble Pulso', badge: 'Top',
     short: 'Reloj inteligente con notificaciones y monitor de actividad.',
-    price: 55000, was: 0,
+    price: 65000, was: 0,
     img: CDN + '1628933/1737055185WhatsApp%20Image%202025-01-16%20at%202.17.32%20PM.jpeg',
     icon: 'watch',
     features: ['Notificaciones del celular', 'Monitor de actividad', 'Pantalla táctil', 'Varias correas'],
@@ -111,7 +111,7 @@ window.PRODUCTS = [
     id: 'car-tipoc', dropiId: '1936562', provider: 'ADRIATIK BRANDS', cat: 'carga',
     name: 'Cargador Tipo C Somostel (Cubo)', badge: '',
     short: 'Cubo de carga compacto con salida USB-C.',
-    price: 25990, was: 0,
+    price: 35990, was: 0,
     img: CDN + '1936562/17606468244.png',
     imgs: [
       CDN + '1936562/17606468244.png',
@@ -134,7 +134,7 @@ window.PRODUCTS = [
     id: 'car-nanotec', dropiId: '2242225', provider: 'LIAMU TECH', cat: 'carga',
     name: 'Cargador de Carro Nanotec', badge: '',
     short: 'Cargador para el carro con varios puertos y luces LED.',
-    price: 45000, was: 0,
+    price: 55000, was: 0,
     img: CDN + '2242225/img_6a90ec86f05701.22059631_0.jpg',
     icon: 'charger',
     features: ['Para carro', 'Varios puertos', 'Luces LED', 'Carga rápida'],
@@ -171,7 +171,7 @@ window.PRODUCTS = [
     id: 'hog-bombparlante', dropiId: '1987268', provider: 'BOODE+', cat: 'hogar',
     name: 'Bombillo Parlante Bluetooth RGB', badge: 'Nuevo',
     short: 'Bombillo LED RGB con parlante Bluetooth integrado y control remoto.',
-    price: 40000, was: 0,
+    price: 50000, was: 0,
     img: CDN + '1987268/1762469417bombillo%20%20parlante1.png',
     imgs: [
       CDN + '1987268/1762469417bombillo%20%20parlante1.png',
@@ -188,7 +188,7 @@ window.PRODUCTS = [
     id: 'acc-tripode', dropiId: '2180548', provider: 'MARTVENTAS', cat: 'accesorios',
     name: 'Trípode Flexible Soporte Celular', badge: 'Top',
     short: 'Trípode flexible que se adapta a cualquier superficie para grabar o ver videos.',
-    price: 55000, was: 0,
+    price: 65000, was: 0,
     img: CDN + '2180548/17818328551qal%C3%B1%7B.jpg',
     imgs: [
       CDN + '2180548/17818328551qal%C3%B1%7B.jpg',
@@ -203,7 +203,7 @@ window.PRODUCTS = [
     id: 'acc-cuello', dropiId: '2032917', provider: 'BOODE+', cat: 'accesorios',
     name: 'Soporte Celular de Cuello Holder', badge: '',
     short: 'Soporte de cuello manos libres para ver videos cómodamente.',
-    price: 35000, was: 0,
+    price: 45000, was: 0,
     img: CDN + '2032917/176789187541vnAsmmQpL._AC_.jpg',
     imgs: [
       CDN + '2032917/176789187541vnAsmmQpL._AC_.jpg',
@@ -219,7 +219,7 @@ window.PRODUCTS = [
     id: 'acc-carrochupa', dropiId: '1734191', provider: 'HELMAN', cat: 'accesorios',
     name: 'Soporte Celular Carro con Ventosa', badge: '',
     short: 'Soporte para el carro con ventosa, giro 360° y agarre firme.',
-    price: 29000, was: 0,
+    price: 39000, was: 0,
     img: CDN + '1734191/1743090360D_NQ_NP_856602-MLA82567556169_022025-O.png',
     imgs: [
       CDN + '1734191/1743090360D_NQ_NP_856602-MLA82567556169_022025-O.png',
@@ -233,7 +233,7 @@ window.PRODUCTS = [
     id: 'acc-carrorej', dropiId: '844494', provider: 'DIEGO', cat: 'accesorios',
     name: 'Soporte Celular Carro Universal', badge: '',
     short: 'Soporte de carro compatible con todas las referencias de celular.',
-    price: 23000, was: 0,
+    price: 33000, was: 0,
     img: CDN + '844494/1715220505PP1.jpg',
     imgs: [
       CDN + '844494/1715220505PP1.jpg',
@@ -249,7 +249,7 @@ window.PRODUCTS = [
     id: 'cre-mic3en1', dropiId: '1924491', provider: 'TV MARKET ONLINE', cat: 'creadores',
     name: 'Micrófono Inalámbrico 3 en 1', badge: 'Top',
     short: 'Micrófono de solapa inalámbrico con adaptadores para celular y cámara.',
-    price: 70000, was: 0,
+    price: 80000, was: 0,
     img: CDN + '1924491/17577174891.jpeg',
     imgs: [
       CDN + '1924491/17577174891.jpeg',
@@ -266,7 +266,7 @@ window.PRODUCTS = [
     id: 'cre-micm10', dropiId: '2247301', provider: 'GEEKA MARKET', cat: 'creadores',
     name: 'Micrófono Inalámbrico M10', badge: '',
     short: 'Micrófono de mano inalámbrico, ideal para karaoke y presentaciones.',
-    price: 85000, was: 0,
+    price: 95000, was: 0,
     img: CDN + '2247301/7a882aaf-b3c4-44b9-b2e4-31b3293bb659.png',
     imgs: [
       CDN + '2247301/7a882aaf-b3c4-44b9-b2e4-31b3293bb659.png',
@@ -283,7 +283,7 @@ window.PRODUCTS = [
     id: 'cre-micn8', dropiId: '2287302', provider: 'GM', cat: 'creadores',
     name: 'Micrófono Inalámbrico Doble Neepho N8', badge: '',
     short: 'Par de micrófonos de solapa inalámbricos para grabar con 2 personas.',
-    price: 41900, was: 0,
+    price: 51900, was: 0,
     img: CDN + '2287302/img_6abeba9121c644.49588842_0.png',
     icon: 'mic',
     features: ['2 micrófonos', 'Inalámbricos', 'Para entrevistas y videos', 'Fácil de usar'],
@@ -292,7 +292,7 @@ window.PRODUCTS = [
     id: 'cre-aro16', dropiId: '957884', provider: 'SOLUCIONES SHOP', cat: 'creadores',
     name: 'Aro de Luz 16 cm Profesional + Trípode', badge: '',
     short: 'Aro de luz con trípode para videos, fotos y videollamadas.',
-    price: 75000, was: 0,
+    price: 85000, was: 0,
     img: CDN + '957884/17205525372d777a2c-6415-44a0-a736-de05eeaddcc6.jpeg',
     imgs: [
       CDN + '957884/17205525372d777a2c-6415-44a0-a736-de05eeaddcc6.jpeg',
@@ -306,7 +306,7 @@ window.PRODUCTS = [
     id: 'cre-arorgb', dropiId: '2336620', provider: 'IMPORTADORA A&N', cat: 'creadores',
     name: 'Aro de Luz RGB 26 cm + Trípode', badge: 'Nuevo',
     short: 'Aro de luz RGB grande con trípode, ideal para creadores de contenido.',
-    price: 80000, was: 0,
+    price: 90000, was: 0,
     img: CDN + '2336620/img_6af4d20605ee34.82169658_0.jpg',
     imgs: [
       CDN + '2336620/img_6af4d20605ee34.82169658_0.jpg',
