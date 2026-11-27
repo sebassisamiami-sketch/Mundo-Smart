@@ -262,7 +262,27 @@
     $('#mPrice').innerHTML = fmt(p.price) + (off ? '<s>' + fmt(p.was) + '</s>' : '');
     $('#mShort').textContent = p.short;
     $('#mRef').textContent = p.dropiId ? ('Código: ' + p.dropiId) : '';
-    $('#mFeats').innerHTML = (p.features || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+    var info = (window.PRODUCT_INFO && window.PRODUCT_INFO[p.id]) || {};
+    // Descripción
+    var desc = info.description || p.short || '';
+    $('#mDesc').textContent = desc;
+    $('#mDescWrap').hidden = !desc;
+    // Características
+    var feats = p.features || [];
+    $('#mFeats').innerHTML = feats.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
+    $('#mFeatsWrap').hidden = !feats.length;
+    // Especificaciones
+    var specs = info.specs || [];
+    $('#mSpecs').innerHTML = specs.map(function (s) {
+      var i = String(s).indexOf(':');
+      if (i > -1) return '<li><span class="sp-k">' + esc(s.slice(0, i)) + '</span><span class="sp-v">' + esc(s.slice(i + 1).trim()) + '</span></li>';
+      return '<li><span class="sp-v">' + esc(s) + '</span></li>';
+    }).join('');
+    $('#mSpecsWrap').hidden = !specs.length;
+    // Garantía
+    var war = p.warranty || CFG.warranty || '';
+    $('#mWarranty').textContent = war;
+    $('#mWarrantyWrap').hidden = !war;
     $('#mQtyVal').textContent = '1';
     showOverlay();
     modal.hidden = false;
