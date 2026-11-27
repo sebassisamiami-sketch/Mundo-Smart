@@ -366,7 +366,7 @@
     var c = o.customer || {};
     var loc = [c.city, c.department, o.country === 'CO' ? 'Colombia' : (o.country ? 'Otro país' : '')].filter(Boolean).join(', ');
     var items = (o.items || []).map(function (it) {
-      return '<div class="it"><span>' + esc(it.name) + ' <span class="q">×' + (it.qty || 1) + '</span></span><span>' + money((it.price || 0) * (it.qty || 1)) + '</span></div>';
+      return '<div class="it"><span>' + esc(it.name) + ' <span class="q">×' + (it.qty || 1) + '</span>' + (it.dropiId ? '<span class="dropi-ref">Dropi: ' + esc(it.dropiId) + '</span>' : '') + '</span><span>' + money((it.price || 0) * (it.qty || 1)) + '</span></div>';
     }).join('') || '<div class="it"><span class="q">Sin artículos</span></div>';
     var stateBtns = STATES.map(function (s) {
       var active = (o.status || 'nuevo') === s;
@@ -429,7 +429,7 @@
     if (!a) return;
     var c = a.customer || {};
     var items = (a.items || []).map(function (it) {
-      return '<div class="it"><span>' + esc(it.name) + ' <span class="q">×' + (it.qty || 1) + '</span></span><span>' + money((it.price || 0) * (it.qty || 1)) + '</span></div>';
+      return '<div class="it"><span>' + esc(it.name) + ' <span class="q">×' + (it.qty || 1) + '</span>' + (it.dropiId ? '<span class="dropi-ref">Dropi: ' + esc(it.dropiId) + '</span>' : '') + '</span><span>' + money((it.price || 0) * (it.qty || 1)) + '</span></div>';
     }).join('') || '<div class="it"><span class="q">Sin artículos</span></div>';
     var waPhone = (c.phone || '').replace(/\D/g, '');
     el.modal.innerHTML =
