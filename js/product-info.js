@@ -4,6 +4,10 @@
  * Clave = id interno del producto (ver js/products.js).
  */
 window.PRODUCT_INFO = {
+  'car-powerbank': {
+    description: 'Batería externa (power bank) de 10.000 mAh con carga inalámbrica magnética: se adhiere a la parte de atrás de tu iPhone y lo carga sin cables. Compacta para llevar en el bolsillo, ideal para no quedarte sin batería durante el día.',
+    specs: ['Capacidad: 10.000 mAh', 'Carga: Inalámbrica magnética', 'Compatibilidad: iPhone (MagSafe) y celulares con carga inalámbrica', 'Puerto: USB-C', 'Tamaño: Compacto y portátil'],
+  },
   'aud-ambie': {
     description: 'Audífonos inalámbricos tipo clip que se ajustan a la oreja sin tapar el oído, cómodos para usar todo el día. Se conectan por Bluetooth a tu celular para escuchar música y contestar llamadas con manos libres, y vienen con estuche que los recarga cuando no los usas.',
     specs: ['Conexión: Bluetooth inalámbrico', 'Formato: Clip de oreja (open-ear)', 'Micrófono: Sí, manos libres', 'Estuche de carga: Incluido', 'Compatibilidad: Android y iPhone', 'Recarga: Cable USB'],
