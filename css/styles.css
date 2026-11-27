@@ -227,7 +227,7 @@ select option { background: #18181b; color: #fff; }
 .steps p { margin: 0; color: var(--mut); }
 
 /* FAQ */
-.faq details { border-bottom: 1px solid var(--line); padding: 22px 0; }
+.faq details { border-bottom: 1px solid var(--line); padding: 16px 0; }
 .faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 20px; font-size: 1.15rem; letter-spacing: -0.02em; }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: '+'; font-size: 1.5rem; line-height: 1; transition: transform 0.4s var(--ease); }
@@ -253,9 +253,9 @@ select option { background: #18181b; color: #fff; }
   transform: translate(-50%, -46%) scale(0.96); opacity: 0; transition: transform 0.5s var(--ease), opacity 0.35s;
 }
 .modal.on { transform: translate(-50%, -50%); opacity: 1; }
-.m-media { position: relative; min-height: 340px; display: grid; place-items: center; background: radial-gradient(circle at 30% 20%, rgba(120, 160, 255, 0.25), transparent 60%), radial-gradient(circle at 80% 90%, rgba(167, 107, 255, 0.22), transparent 55%), #17171a; }
+.m-media { position: sticky; top: 0; align-self: start; height: min(72vh, 540px); display: grid; place-items: center; background: radial-gradient(circle at 30% 20%, rgba(120, 160, 255, 0.25), transparent 60%), radial-gradient(circle at 80% 90%, rgba(167, 107, 255, 0.22), transparent 55%), #17171a; }
 .m-media svg { width: 52%; stroke: #fff; fill: none; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 10px 30px rgba(120, 160, 255, 0.4)); animation: floaty 5s ease-in-out infinite; }
-.m-media img { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; padding: 22px; }
+.m-media img { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; padding: 16px; }
 @keyframes floaty { 50% { transform: translateY(-10px) rotate(-3deg); } }
 .m-body { padding: 36px 32px 32px; display: flex; flex-direction: column; gap: 12px; }
 .m-body .eyebrow { margin: 0; }
@@ -278,7 +278,7 @@ select option { background: #18181b; color: #fff; }
   display: flex; flex-direction: column; transform: translateX(102%); transition: transform 0.55s var(--ease);
 }
 .drawer.on { transform: none; }
-.d-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); position: relative; }
+.d-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--line); position: relative; }
 .d-head h3 { font-size: 1.25rem; }
 .d-head .x { position: static; }
 .d-view { display: flex; flex-direction: column; flex: 1; min-height: 0; }
@@ -342,7 +342,8 @@ select option { background: #18181b; color: #fff; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .steps { grid-template-columns: 1fr; }
   .modal { grid-template-columns: 1fr; }
-  .m-media { min-height: 220px; }
+  .m-media { position: static; align-self: stretch; height: auto; min-height: 0; aspect-ratio: 1 / 1; }
+  .m-media img { padding: 14px; }
   .m-body { padding: 24px 20px 22px; }
   .search { flex: 1; }
   .search input { width: 100%; }
@@ -420,12 +421,12 @@ select option { background: #18181b; color: #fff; }
 .m-media { display: block; padding: 0; }
 .carousel, .car-single { position: absolute; inset: 0; }
 .car-single { display: grid; place-items: center; background: #17171a; }
-.car-single img { width: 100%; height: 100%; object-fit: contain; position: static; padding: 22px; }
+.car-single img { width: 100%; height: 100%; object-fit: contain; position: static; padding: 16px; }
 .car-single svg { width: 52%; height: auto; stroke: #fff; fill: none; stroke-width: 1.1; animation: floaty 5s ease-in-out infinite; }
 .car-track { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .car-track::-webkit-scrollbar { display: none; }
 .car-slide { flex: 0 0 100%; scroll-snap-align: center; display: grid; place-items: center; background: #17171a; }
-.car-slide img { width: 100%; height: 100%; object-fit: contain; position: static; inset: auto; padding: 22px; }
+.car-slide img { width: 100%; height: 100%; object-fit: contain; position: static; inset: auto; padding: 16px; }
 .car-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: #fff; font-size: 1.5rem; line-height: 1; display: grid; place-items: center; transition: background 0.2s, transform 0.2s; z-index: 2; }
 .car-nav:hover { background: rgba(0, 0, 0, 0.78); }
 .car-nav:active { transform: translateY(-50%) scale(0.92); }
