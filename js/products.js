@@ -27,8 +27,9 @@ window.PRODUCTS = [
     name: 'Power Bank iPhone 10.000 mAh Magnético', badge: 'Top',
     short: 'Batería externa magnética de 10.000 mAh para iPhone: carga sin cables.',
     price: 59900, was: 0,
-    img: CDN + '2154855/177929441817727410631764691589images%20(37).jpeg',
+    img: 'assets/products/powerbank-cafe.jpg',
     imgs: [
+      'assets/products/powerbank-cafe.jpg',
       CDN + '2154855/177929441817727410631764691589images%20(37).jpeg',
       CDN + '2154855/177929441817727410631764691589D_NQ_NP_705913-MCO69686630347_052023-O.webp',
     ],
