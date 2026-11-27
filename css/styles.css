@@ -342,7 +342,7 @@ select option { background: #18181b; color: #fff; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .steps { grid-template-columns: 1fr; }
   .modal { grid-template-columns: 1fr; }
-  .m-media { min-height: 220px; }
+  .m-media { aspect-ratio: 1 / 1; min-height: 0; }
   .m-body { padding: 24px 20px 22px; }
   .search { flex: 1; }
   .search input { width: 100%; }
