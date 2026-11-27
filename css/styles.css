@@ -443,3 +443,40 @@ select option { background: #18181b; color: #fff; }
 /* Código de Dropi en el modal del producto */
 .m-ref{font-size:12.5px;color:var(--muted,#8a8a92);margin:-6px 0 14px;letter-spacing:.3px}
 .m-ref:empty{display:none}
+
+/* ===== Botón "Ver información completa" ===== */
+.full-btn { width: 100%; justify-content: center; margin-top: 2px; }
+
+/* ===== Secciones de info (vista completa) ===== */
+.m-section { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 4px; }
+.m-section[hidden] { display: none; }
+.m-h { margin: 0 0 10px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: #8aa6d6; }
+.m-desc { margin: 0; color: #c6c6cd; line-height: 1.6; font-size: 0.95rem; }
+.m-specs { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.m-specs li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.9rem; }
+.m-specs li:last-child { border-bottom: 0; }
+.m-specs .sp-k { color: #9a9aa2; flex: none; }
+.m-specs .sp-v { color: #e6e6ea; text-align: right; }
+.m-warranty { margin: 0; color: #c6c6cd; line-height: 1.55; font-size: 0.9rem; background: rgba(138,166,214,0.08); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+
+/* ===== Vista completa del producto (sección aparte) ===== */
+.full-modal { position: fixed; inset: 0; z-index: 90; background: var(--bg); overflow-y: auto; opacity: 0; transition: opacity 0.3s ease; }
+.full-modal.on { opacity: 1; }
+.full-top { position: sticky; top: 0; z-index: 2; padding: 14px 18px; background: rgba(12,12,13,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.full-back { background: var(--card); border: 1px solid var(--line); color: #e8e8ee; border-radius: 999px; padding: 9px 16px; font-size: 0.92rem; cursor: pointer; transition: border-color 0.2s; }
+.full-back:hover { border-color: #5b8cff; }
+.full-inner { max-width: 1080px; margin: 0 auto; padding: 24px 18px 64px; }
+.full-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+.full-media { position: sticky; top: 78px; height: min(68vh, 560px); border-radius: 16px; overflow: hidden; background: #f4f5f7; border: 1px solid var(--line); }
+.full-media .car-slide, .full-media .car-single { background: #f4f5f7; }
+.full-media .car-slide img, .full-media .car-single img { object-fit: contain; padding: 18px; }
+.full-media .car-dot { background: rgba(0,0,0,0.28); }
+.full-media .car-dot.on { background: #1b1b1f; }
+.full-body { display: flex; flex-direction: column; gap: 12px; }
+.full-title { font-size: 1.8rem; line-height: 1.12; letter-spacing: -0.03em; margin: 0; }
+.full-price { margin: 0; font-size: 1.5rem; font-weight: 600; }
+.full-price s { margin-left: 8px; color: var(--mut); font-size: 1rem; font-weight: 400; }
+@media (max-width: 820px) {
+  .full-grid { grid-template-columns: 1fr; gap: 20px; }
+  .full-media { position: static; height: auto; aspect-ratio: 1 / 1; }
+}

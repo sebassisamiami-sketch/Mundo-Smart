@@ -9,6 +9,9 @@ window.CONFIG = {
 
   currency: 'COP',
 
+  // Garantía que se muestra en la vista completa del producto. Ajústala a lo que ofreces.
+  warranty: 'Garantía de 30 días por defectos de fábrica. Si tu producto llega dañado o con fallas, lo cambiamos sin costo.',
+
   // Envío estimado (ajústalo a lo que realmente te cobra Dropi / tu transportadora)
   shippingFlat: 12000,
   freeShippingFrom: 150000,
