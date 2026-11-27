@@ -261,7 +261,7 @@
     $('#mTitle').textContent = p.name;
     $('#mPrice').innerHTML = fmt(p.price) + (off ? '<s>' + fmt(p.was) + '</s>' : '');
     $('#mShort').textContent = p.short;
-    $('#mRef').textContent = p.dropiId ? ('Código Dropi: ' + p.dropiId) : '';
+    $('#mRef').textContent = p.dropiId ? ('Código: ' + p.dropiId) : '';
     $('#mFeats').innerHTML = (p.features || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
     $('#mQtyVal').textContent = '1';
     showOverlay();
