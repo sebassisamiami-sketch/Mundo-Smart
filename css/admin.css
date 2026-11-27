@@ -136,3 +136,38 @@ tbody tr:hover{background:var(--card2)}
   .kv{grid-template-columns:1fr}
   .kv .k{margin-top:8px}
 }
+
+/* ===== Mejoras v2 ===== */
+.dlabel{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted)}
+.dlabel input{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:8px 10px;font-size:13px;color-scheme:dark}
+.hidden{display:none!important}
+
+/* Secciones del resumen */
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px}
+.section h3{margin:0 0 16px;font-size:15px;font-weight:700}
+.section h3 .sub{color:var(--muted);font-weight:400;font-size:12.5px;margin-left:8px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+
+/* Gráfica de barras (SVG) */
+.chart{width:100%;height:auto;display:block}
+.bar{fill:var(--accent);transition:fill .15s}
+.bar:hover{fill:var(--accent2)}
+.chart text{fill:var(--muted);font-size:10px;font-family:inherit}
+.chart .axis{stroke:var(--line);stroke-width:1}
+
+/* Top productos */
+.rankrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rankrow:last-child{border-bottom:none}
+.rankn{width:24px;height:24px;flex:0 0 auto;border-radius:7px;background:var(--pill);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--accent2)}
+.rankinfo{flex:1;min-width:0}
+.rankinfo .nm{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rankinfo .meta{font-size:12px;color:var(--muted)}
+.rankbar{height:6px;background:var(--pill);border-radius:4px;overflow:hidden;margin-top:5px}
+.rankbar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* Nota interna + acciones del modal */
+.note-box{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:13.5px;font-family:inherit;resize:vertical;min-height:62px;outline:none}
+.note-box:focus{border-color:var(--accent)}
+tr.is-new td{box-shadow:inset 3px 0 0 var(--accent)}
+.hint{font-size:12px;color:var(--muted);margin:2px 0 0}
