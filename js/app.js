@@ -40,21 +40,24 @@
     var slides = imgs.map(function (u, i) {
       return '<div class="car-slide"><img src="' + esc(u) + '" alt="' + esc(p.name) + ' foto ' + (i + 1) + '" loading="lazy" /></div>';
     }).join('');
-    var dots = imgs.map(function (_, i) {
-      return '<button class="car-dot' + (i === 0 ? ' on' : '') + '" data-i="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
+    var thumbs = imgs.map(function (u, i) {
+      return '<button class="car-th' + (i === 0 ? ' on' : '') + '" data-i="' + i + '" aria-label="Foto ' + (i + 1) + '"><img src="' + esc(u) + '" alt="" loading="lazy" /></button>';
     }).join('');
     return '<div class="carousel" data-n="' + imgs.length + '">' +
-      '<div class="car-track">' + slides + '</div>' +
-      '<button class="car-nav car-prev" aria-label="Anterior">‹</button>' +
-      '<button class="car-nav car-next" aria-label="Siguiente">›</button>' +
-      '<span class="car-count">1/' + imgs.length + '</span>' +
-      '<div class="car-dots">' + dots + '</div></div>';
+      '<div class="car-stage">' +
+        '<div class="car-track">' + slides + '</div>' +
+        '<button class="car-nav car-prev" aria-label="Anterior">‹</button>' +
+        '<button class="car-nav car-next" aria-label="Siguiente">›</button>' +
+        '<span class="car-count">1/' + imgs.length + '</span>' +
+      '</div>' +
+      '<div class="car-thumbs">' + thumbs + '</div>' +
+    '</div>';
   }
   function initCarousel(root) {
     var car = root.querySelector('.carousel');
     if (!car) return;
     var track = car.querySelector('.car-track');
-    var dots = Array.prototype.slice.call(car.querySelectorAll('.car-dot'));
+    var thumbs = Array.prototype.slice.call(car.querySelectorAll('.car-th'));
     var count = car.querySelector('.car-count');
     var n = Number(car.getAttribute('data-n'));
     function cur() { return Math.round(track.scrollLeft / track.clientWidth); }
@@ -64,12 +67,12 @@
     }
     function sync() {
       var i = cur();
-      dots.forEach(function (d, j) { d.classList.toggle('on', j === i); });
+      thumbs.forEach(function (d, j) { d.classList.toggle('on', j === i); });
       if (count) count.textContent = (i + 1) + '/' + n;
     }
     car.querySelector('.car-prev').addEventListener('click', function () { go(cur() - 1); });
     car.querySelector('.car-next').addEventListener('click', function () { go(cur() + 1); });
-    dots.forEach(function (d) { d.addEventListener('click', function () { go(Number(d.dataset.i)); }); });
+    thumbs.forEach(function (d) { d.addEventListener('click', function () { go(Number(d.dataset.i)); }); });
     var raf;
     track.addEventListener('scroll', function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); }, { passive: true });
   }
@@ -195,7 +198,6 @@
         '<div class="thumb">' + (p.badge ? '<span class="badge">' + esc(p.badge) + '</span>' : '') + (off ? '<span class="badge off">-' + off + '%</span>' : '') + (gallery(p).length > 1 ? '<span class="photo-count">▣ ' + gallery(p).length + '</span>' : '') + media(p) + '</div>' +
         '<div class="c-body"><span class="c-cat">' + esc(catName(p.cat)) + '</span>' +
         '<h3 class="c-name">' + esc(p.name) + '</h3>' +
-        '<p class="c-short">' + esc(p.short) + '</p>' +
         '<div class="c-foot"><span class="price">' + fmt(p.price) + (off ? '<s>' + fmt(p.was) + '</s>' : '') + '</span>' +
         '<button class="add" data-add="' + p.id + '" aria-label="Agregar ' + esc(p.name) + ' al carrito">+</button></div></div></article>';
     }).join('');
