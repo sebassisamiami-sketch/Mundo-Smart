@@ -22,6 +22,7 @@
   var S = {
     loaded: false,
     sub: 'productos',
+    prodFilter: 'all',
     cat: { products: [], categories: [] }, catExists: false,
     conf: {}, confExists: false,
     legal: { terminos: '', privacidad: '' }, legalExists: false,
@@ -129,16 +130,22 @@
   /* ================= PRODUCTOS ================= */
   function viewProductos() {
     var hint = S.catExists ? '' : '<div class="ed-note">Estás viendo tu catálogo actual. Toca <b>Guardar y publicar</b> una vez para empezar a editarlo en vivo.</div>';
-    var rows = S.cat.products.map(function (p, i) { return productRow(p, i); }).join('');
-    if (!S.cat.products.length) rows = '<div class="empty">No hay productos. Agrega el primero.</div>';
+    var filter = S.prodFilter || 'all';
+    var list = filter === 'all' ? S.cat.products : S.cat.products.filter(function (p) { return p.cat === filter; });
+    var opts = '<option value="all"' + (filter === 'all' ? ' selected' : '') + '>Todas las categorías</option>' +
+      S.cat.categories.map(function (c) { return '<option value="' + esc(c.id) + '"' + (c.id === filter ? ' selected' : '') + '>' + esc(c.name) + '</option>'; }).join('');
+    var rows = list.map(function (p, i) { return productRow(p, i); }).join('');
+    if (!list.length) rows = '<div class="empty">' + (filter === 'all' ? 'No hay productos. Agrega el primero.' : 'No hay productos en esta categoría.') + '</div>';
     return hint +
       '<div class="ed-bar">' +
         '<button class="btn btn-accent" data-act="prod-add">➕ Nuevo producto</button>' +
-        '<span class="ed-count">' + S.cat.products.length + ' productos</span>' +
+        '<label class="ed-filter">Ver: <select data-prodfilter>' + opts + '</select></label>' +
+        '<span class="ed-count">' + list.length + (filter === 'all' ? ' productos' : ' en esta categoría') + '</span>' +
         '<span class="spacer"></span>' +
         '<span class="ed-dirty" data-dirty="catalog">' + (S.dirty.catalog ? '● Cambios sin guardar' : '') + '</span>' +
         '<button class="btn btn-accent" data-act="catalog-save">💾 Guardar y publicar</button>' +
       '</div>' +
+      (filter !== 'all' ? '<div class="ed-note">Viendo solo <b>' + esc(catName(filter)) + '</b>. Aquí ordenas los productos <b>dentro de esta categoría</b> con ▲▼ o arrastrando la manija ⠿.</div>' : '') +
       '<div class="ed-list">' + rows + '</div>';
   }
 
@@ -457,7 +464,8 @@
 
     // productos
     if (act === 'prod-add') {
-      var np = { id: genId('p'), name: 'Nuevo producto', cat: (S.cat.categories[0] || {}).id || '', price: 0, was: 0, badge: '', short: '', description: '', dropiId: '', provider: '', icon: '', features: [], specs: [], imgs: [], img: '' };
+      var defCat = (S.prodFilter && S.prodFilter !== 'all') ? S.prodFilter : ((S.cat.categories[0] || {}).id || '');
+      var np = { id: genId('p'), name: 'Nuevo producto', cat: defCat, price: 0, was: 0, badge: '', short: '', description: '', dropiId: '', provider: '', icon: '', features: [], specs: [], imgs: [], img: '' };
       S.cat.products.unshift(np); S.openId = np.id; setDirty('catalog'); return draw();
     }
     if (act === 'prod-toggle') { S.openId = (S.openId === id ? null : id); return draw(); }
@@ -467,9 +475,13 @@
       if (S.openId === id) S.openId = null; setDirty('catalog'); return draw();
     }
     if (act === 'prod-up' || act === 'prod-down') {
-      var i = idxProd(id), j = act === 'prod-up' ? i - 1 : i + 1;
-      if (i < 0 || j < 0 || j >= S.cat.products.length) return;
-      var t = S.cat.products[i]; S.cat.products[i] = S.cat.products[j]; S.cat.products[j] = t;
+      var filt = S.prodFilter || 'all';
+      var lst = filt === 'all' ? S.cat.products : S.cat.products.filter(function (p) { return p.cat === filt; });
+      var fi = -1; for (var z = 0; z < lst.length; z++) if (lst[z].id === id) fi = z;
+      var fj = act === 'prod-up' ? fi - 1 : fi + 1;
+      if (fi < 0 || fj < 0 || fj >= lst.length) return;
+      var gi = idxProd(lst[fi].id), gj = idxProd(lst[fj].id);
+      var t = S.cat.products[gi]; S.cat.products[gi] = S.cat.products[gj]; S.cat.products[gj] = t;
       setDirty('catalog'); return draw();
     }
 
@@ -528,8 +540,8 @@
 
   function onChangeInput(e) {
     var t = e.target;
-    // subtabs
-    if (t.hasAttribute && false) {}
+    // filtro de categoría en Productos
+    if (t.hasAttribute('data-prodfilter')) { S.prodFilter = t.value; draw(); return; }
     // producto: campos
     if (t.hasAttribute('data-field')) {
       var p = findProd(t.getAttribute('data-id')); if (!p) return;

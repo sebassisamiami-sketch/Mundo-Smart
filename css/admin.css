@@ -273,3 +273,9 @@ tr.is-new td{box-shadow:inset 3px 0 0 var(--accent)}
 .ed-catimg img,.ed-catimg video{width:56px;height:56px;object-fit:cover;border-radius:10px;background:var(--bg2)}
 .ed-catimg .ph{width:56px;height:56px;display:grid;place-items:center;background:var(--bg2);
   border-radius:10px;color:var(--muted)}
+
+/* Filtro de categoría en Productos */
+.ed-filter{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.ed-filter select{background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+  border-radius:9px;padding:7px 10px;font-size:13px}
+.ed-filter select:focus{border-color:var(--accent);outline:none}
