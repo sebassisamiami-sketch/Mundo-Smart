@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Reglas de Firebase Storage para Mundo Smart.
+// Publícalas en: Firebase Console → Storage → Reglas → Publicar.
+//
+// Qué hacen:
+//  - Las fotos de productos (carpeta /products) son PÚBLICAS para que la tienda las muestre.
+//  - Solo tu correo de administrador puede SUBIR, cambiar o borrar fotos.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'sebastian.sisatravel@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Fotos de productos (las sube el administrador desde el panel)
+    match /products/{allPaths=**} {
+      allow read: if true;
+      // Hasta 8 MB por imagen y solo archivos de imagen.
+      allow write: if isAdmin()
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+      allow delete: if isAdmin();
+    }
+
+    // Todo lo demás, bloqueado
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/styles.css?v=23" />
   <link rel="stylesheet" href="css/legal.css?v=1" />
 </head>
-<body>
+<body data-legal="terminos">
   <nav class="legal-nav">
     <a class="brand" href="/#inicio">Mundo<span>+</span>Smart</a>
     <a class="back" href="/#inicio">← Volver a la tienda</a>
@@ -21,6 +21,7 @@
     <h1>Términos y Condiciones y Política de Uso</h1>
     <p class="updated">Última actualización: 27 de noviembre de 2026</p>
 
+    <div id="legalBody">
     <h2>1. Aceptación de los términos</h2>
     <p>Bienvenido a <strong>Mundo Smart</strong>. Al ingresar, navegar o realizar una compra en este sitio web, aceptas estos Términos y Condiciones y nuestra Política de Uso. Si no estás de acuerdo con ellos, te pedimos no utilizar el sitio.</p>
 
@@ -71,6 +72,13 @@
     </div>
 
     <p class="note">Este documento es una guía general de uso de la tienda. Para una operación formal, te recomendamos complementarlo con tus datos legales (nombre o razón social, NIT o cédula y correo de contacto) y, si lo deseas, la revisión de un abogado.</p>
+    </div>
   </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js?v=12"></script>
+  <script src="js/legal-content.js?v=1"></script>
+  <script src="js/legal-live.js?v=1"></script>
 </body>
 </html>

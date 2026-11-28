@@ -31,6 +31,13 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
     }
 
+    // Contenido editable de la tienda (catálogo, categorías, ajustes, textos legales).
+    // La tienda (pública) lo LEE para mostrarse; solo el administrador lo EDITA desde el panel.
+    match /site/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Todo lo demás, bloqueado
     match /{document=**} {
       allow read, write: if false;

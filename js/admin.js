@@ -173,6 +173,7 @@
   });
 
   function renderActive() {
+    if (activeTab === 'editor') return (window.MSEditor && window.MSEditor.render(el.view));
     if (activeTab === 'resumen') return renderResumen();
     if (activeTab === 'orders') return renderOrders();
     if (activeTab === 'attempts') return renderAttempts();

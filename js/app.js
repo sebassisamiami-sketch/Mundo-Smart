@@ -140,12 +140,16 @@
 
   /* ---------- Categorías ---------- */
   var catGrid = $('#catGrid');
-  catGrid.innerHTML = CATS.map(function (c, i) {
-    return '<button class="cat" data-cat="' + c.id + '" data-reveal style="--d:' + (i * 0.07).toFixed(2) + 's">' +
-      '<svg class="arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>' +
-      svg(c.icon) +
-      '<div><h3>' + esc(c.name) + '</h3><p>' + esc(c.desc) + '</p></div></button>';
-  }).join('');
+  function renderCats() {
+    catGrid.innerHTML = CATS.map(function (c, i) {
+      return '<button class="cat" data-cat="' + c.id + '" data-reveal style="--d:' + (i * 0.07).toFixed(2) + 's">' +
+        '<svg class="arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>' +
+        svg(c.icon) +
+        '<div><h3>' + esc(c.name) + '</h3><p>' + esc(c.desc) + '</p></div></button>';
+    }).join('');
+    observe(catGrid);
+  }
+  renderCats();
   catGrid.addEventListener('click', function (e) {
     var b = e.target.closest('.cat');
     if (!b) return;
@@ -293,6 +297,8 @@
     var p = findP(id); if (!p) return;
     fullId = id; fullQty = 1;
     var info = (window.PRODUCT_INFO && window.PRODUCT_INFO[id]) || {};
+    if (p.description) info = Object.assign({}, info, { description: p.description });
+    if (p.specs && p.specs.length) info = Object.assign({}, info, { specs: p.specs });
     var off = p.was && p.was > p.price;
     $('#fMedia').innerHTML = carousel(p);
     initCarousel($('#fMedia'));
@@ -779,4 +785,32 @@
   renderCart();
   updateCountry();
   observe(document);
+
+  /* ---------- Contenido en vivo (desde Firestore, opcional) ---------- */
+  // content.js llama a esto cuando llega o se actualiza el contenido del panel,
+  // para que los cambios del administrador se vean en la tienda sin recargar.
+  function refreshChrome() {
+    try {
+      wa.href = waConfigured() ? waLink('Hola, tengo una pregunta sobre ' + CFG.storeName) : '#';
+      $('#faqCO').textContent = 'En Colombia, ' + CFG.deliveryCO + ' según la ciudad.';
+      $('#faqIntl').textContent = 'Sí, bajo pedido. Tiempo estimado: ' + CFG.deliveryIntl + '. Te confirmamos el costo antes de cobrar; pueden aplicar impuestos de aduana del país de destino.';
+    } catch (e) {}
+  }
+  window.__MS_APPLY = function (c) {
+    if (!c) return;
+    if (Array.isArray(c.categories) && c.categories.length) { CATS = window.CATEGORIES = c.categories; }
+    if (Array.isArray(c.products)) { PRODUCTS = window.PRODUCTS = c.products; }
+    if (c.config && typeof c.config === 'object') {
+      CFG = window.CONFIG = Object.assign({}, CFG, c.config);
+      money = new Intl.NumberFormat('es-CO', { style: 'currency', currency: CFG.currency || 'COP', maximumFractionDigits: 0 });
+      PAY = CFG.payments || PAY;
+    }
+    if (state.cat !== 'all' && !CATS.some(function (x) { return x.id === state.cat; })) state.cat = 'all';
+    renderCats();
+    renderChips();
+    renderGrid();
+    renderCart();
+    updateCountry();
+    refreshChrome();
+  };
 })();

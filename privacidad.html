@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/styles.css?v=23" />
   <link rel="stylesheet" href="css/legal.css?v=1" />
 </head>
-<body>
+<body data-legal="privacidad">
   <nav class="legal-nav">
     <a class="brand" href="/#inicio">Mundo<span>+</span>Smart</a>
     <a class="back" href="/#inicio">← Volver a la tienda</a>
@@ -21,6 +21,7 @@
     <h1>Política de Privacidad y Tratamiento de Datos Personales</h1>
     <p class="updated">Última actualización: 27 de noviembre de 2026</p>
 
+    <div id="legalBody">
     <p>En <strong>Mundo Smart</strong> protegemos tu información. Esta política explica qué datos recolectamos, con qué fin y cómo puedes ejercer tus derechos, conforme a la <strong>Ley 1581 de 2012</strong> y el Decreto 1377 de 2013 de Colombia (Habeas Data).</p>
 
     <h2>1. Responsable del tratamiento</h2>
@@ -71,6 +72,13 @@
     <p>Podemos actualizar esta Política de Privacidad en cualquier momento. La versión vigente será siempre la publicada en esta página, con su fecha de actualización.</p>
 
     <p class="note">Este documento es una guía general. Para una operación formal, te recomendamos complementarlo con tus datos legales (nombre o razón social, NIT o cédula y correo de contacto) y, si lo deseas, la revisión de un abogado.</p>
+    </div>
   </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js?v=12"></script>
+  <script src="js/legal-content.js?v=1"></script>
+  <script src="js/legal-live.js?v=1"></script>
 </body>
 </html>
