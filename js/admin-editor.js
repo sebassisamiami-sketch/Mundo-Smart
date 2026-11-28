@@ -43,6 +43,11 @@
   function iconKeys() { return Object.keys(window.ICONS || {}); }
   function catName(id) { var c = S.cat.categories.filter(function (x) { return x.id === id; })[0]; return c ? c.name : '—'; }
   function imgsOf(p) { if (p.imgs && p.imgs.length) return p.imgs; return p.img ? [p.img] : []; }
+  function isVideo(u) { return /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(String(u || '')); }
+  function edThumb(u) {
+    if (!u) return '<span class="ph">▣</span>';
+    return isVideo(u) ? '<video src="' + esc(u) + '#t=0.5" muted preload="metadata"></video>' : '<img src="' + esc(u) + '" alt="">';
+  }
 
   var toastEl = null, toastT = null;
   function toast(msg) {
@@ -139,9 +144,9 @@
 
   function productRow(p, i) {
     var open = S.openId === p.id;
-    var thumb = (imgsOf(p)[0]) ? '<img src="' + esc(imgsOf(p)[0]) + '" alt="">' : '<span class="ph">▣</span>';
     var head = '<div class="ed-row-h">' +
-        '<div class="ed-thumb">' + thumb + '</div>' +
+        '<span class="ic drag" draggable="true" data-draghandle data-dragkind="prod" data-id="' + esc(p.id) + '" title="Arrastrar para mover">⠿</span>' +
+        '<div class="ed-thumb">' + edThumb(imgsOf(p)[0]) + '</div>' +
         '<div class="ed-row-main"><b>' + esc(p.name || '(sin nombre)') + '</b>' +
           '<span class="ed-row-sub">' + esc(catName(p.cat)) + ' · ' + money(p.price) + (p.badge ? ' · ' + esc(p.badge) : '') + '</span></div>' +
         '<div class="ed-row-actions">' +
@@ -150,8 +155,8 @@
           '<button class="ic" data-act="prod-toggle" data-id="' + esc(p.id) + '">' + (open ? 'Cerrar' : '✏️ Editar') + '</button>' +
           '<button class="ic ic-danger" data-act="prod-del" data-id="' + esc(p.id) + '" title="Eliminar">🗑</button>' +
         '</div></div>';
-    if (!open) return '<div class="ed-row">' + head + '</div>';
-    return '<div class="ed-row open">' + head + productForm(p) + '</div>';
+    if (!open) return '<div class="ed-row" data-pid="' + esc(p.id) + '">' + head + '</div>';
+    return '<div class="ed-row open" data-pid="' + esc(p.id) + '">' + head + productForm(p) + '</div>';
   }
 
   function field(label, id, fieldName, val, type, ph) {
@@ -187,20 +192,25 @@
   function imagesBlock(p) {
     var imgs = imgsOf(p);
     var thumbs = imgs.map(function (u, i) {
-      return '<div class="ed-img">' + (i === 0 ? '<span class="ed-main">★ Principal</span>' : '') +
-        '<img src="' + esc(u) + '" alt="">' +
+      var vid = isVideo(u);
+      return '<div class="ed-img">' +
+        (i === 0 ? '<span class="ed-main">★ Principal</span>' : '') +
+        (vid ? '<span class="ed-vidtag">📹</span>' : '') +
+        (vid ? '<video src="' + esc(u) + '#t=0.5" muted preload="metadata"></video>' : '<img src="' + esc(u) + '" alt="">') +
         '<div class="ed-img-acts">' +
+          (i > 0 ? '<button class="ic" data-act="img-main" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Hacer principal">★</button>' : '') +
           '<button class="ic" data-act="img-up" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover izquierda">◀</button>' +
           '<button class="ic" data-act="img-down" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover derecha">▶</button>' +
           '<button class="ic ic-danger" data-act="img-del" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Quitar">✕</button>' +
         '</div></div>';
     }).join('');
-    if (!imgs.length) thumbs = '<div class="ed-img-empty">Sin fotos todavía.</div>';
-    return '<div class="ed-images"><span class="ed-f-label">Fotos <small>(la primera es la principal)</small></span>' +
+    if (!imgs.length) thumbs = '<div class="ed-img-empty">Sin fotos ni videos todavía.</div>';
+    return '<div class="ed-images"><span class="ed-f-label">Fotos y videos <small>(la primera es la principal · arrastra ◀▶ o usa ★ para ordenar)</small></span>' +
       '<div class="ed-img-grid">' + thumbs + '</div>' +
       '<div class="ed-img-add">' +
         '<label class="btn btn-sm">📤 Subir foto(s)<input type="file" accept="image/*" multiple data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
-        '<input type="url" class="ed-url" data-id="' + esc(p.id) + '" placeholder="…o pega el enlace de una imagen (https://…)">' +
+        '<label class="btn btn-sm">📹 Subir video<input type="file" accept="video/*" data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
+        '<input type="url" class="ed-url" data-id="' + esc(p.id) + '" placeholder="…o pega el enlace de una imagen/video (https://…)">' +
         '<button class="btn btn-sm" data-act="img-url" data-id="' + esc(p.id) + '">Agregar enlace</button>' +
       '</div>' +
       '<div class="ed-up-status" data-up="' + esc(p.id) + '"></div></div>';
@@ -216,17 +226,21 @@
         return '<option value="' + esc(k) + '"' + (k === (c.icon || '') ? ' selected' : '') + '>' + (k || '(sin ícono)') + '</option>';
       }).join('');
       var used = S.cat.products.filter(function (p) { return p.cat === c.id; }).length;
-      return '<div class="ed-row open"><div class="ed-form">' +
+      var photo = '<div class="ed-catimg">' + (c.img ? edThumb(c.img) : '<span class="ph">▣</span>') +
+        '<label class="btn btn-sm">📤 Subir<input type="file" accept="image/*" data-act="catimg-upload" data-cid="' + esc(c.id) + '" hidden></label>' +
+        (c.img ? '<button class="ic ic-danger" data-act="catimg-del" data-cid="' + esc(c.id) + '" title="Quitar">✕</button>' : '') +
+        '</div>';
+      return '<div class="ed-row open" data-cidrow="' + esc(c.id) + '"><div class="ed-form">' +
+        '<div class="ed-cat-head"><span class="ic drag" draggable="true" data-draghandle data-dragkind="cat" data-id="' + esc(c.id) + '" title="Arrastrar para mover">⠿</span><b>' + esc(c.name || '(sin nombre)') + '</b><span class="ed-count">' + used + ' productos</span></div>' +
         '<div class="ed-grid">' +
           '<label class="ed-f"><span>Nombre</span><input data-cfield="name" data-cid="' + esc(c.id) + '" value="' + esc(c.name) + '"></label>' +
           '<label class="ed-f"><span>Descripción</span><input data-cfield="desc" data-cid="' + esc(c.id) + '" value="' + esc(c.desc) + '"></label>' +
-          '<label class="ed-f"><span>Ícono</span><select data-cfield="icon" data-cid="' + esc(c.id) + '">' + icons + '</select></label>' +
-          '<label class="ed-f"><span>ID (no cambiar)</span><input value="' + esc(c.id) + '" disabled></label>' +
+          '<label class="ed-f"><span>Ícono (si no hay foto)</span><select data-cfield="icon" data-cid="' + esc(c.id) + '">' + icons + '</select></label>' +
+          '<label class="ed-f"><span>Foto de la categoría (opcional)</span>' + photo + '</label>' +
         '</div>' +
         '<div class="ed-row-actions" style="justify-content:flex-start">' +
-          '<button class="ic" data-act="cat-up" data-cid="' + esc(c.id) + '">▲</button>' +
-          '<button class="ic" data-act="cat-down" data-cid="' + esc(c.id) + '">▼</button>' +
-          '<span class="ed-count">' + used + ' productos</span>' +
+          '<button class="ic" data-act="cat-up" data-cid="' + esc(c.id) + '">▲ Subir</button>' +
+          '<button class="ic" data-act="cat-down" data-cid="' + esc(c.id) + '">▼ Bajar</button>' +
           '<button class="ic ic-danger" data-act="cat-del" data-cid="' + esc(c.id) + '">🗑 Eliminar</button>' +
         '</div></div></div>';
     }).join('');
@@ -351,7 +365,7 @@
   function uploadFiles(productId, files) {
     initFb();
     var statusEl = root.querySelector('[data-up="' + productId + '"]');
-    if (!storage) { if (statusEl) statusEl.textContent = '⚠️ Activa Storage en Firebase para subir fotos.'; return; }
+    if (!storage) { if (statusEl) statusEl.textContent = '⚠️ Activa Storage en Firebase para subir fotos o videos.'; return; }
     var p = findProd(productId); if (!p) return;
     if (!p.imgs) p.imgs = p.img ? [p.img] : [];
     var arr = Array.prototype.slice.call(files);
@@ -359,21 +373,72 @@
     if (statusEl) statusEl.textContent = 'Subiendo 0/' + total + '…';
     arr.reduce(function (chain, file) {
       return chain.then(function () {
-        return resizeImage(file, 1400, 0.85).then(function (blob) {
-          var name = (file.name || 'foto').replace(/[^\w.\-]/g, '_').replace(/\.[^.]+$/, '') + '.jpg';
-          var path = 'products/' + productId + '/' + Date.now() + '-' + name;
+        var isVid = /^video\//.test(file.type) || isVideo(file.name);
+        var prep = isVid ? Promise.resolve(file) : resizeImage(file, 1400, 0.85);
+        return prep.then(function (blob) {
+          var ext = isVid ? (String(file.name).match(/\.[a-z0-9]+$/i) || ['.mp4'])[0] : '.jpg';
+          var ctype = isVid ? (file.type || 'video/mp4') : 'image/jpeg';
+          var base = String(file.name || 'media').replace(/\.[^.]+$/, '').replace(/[^\w\-]/g, '_').slice(0, 40) || 'media';
+          var path = 'products/' + productId + '/' + Date.now() + '-' + base + ext;
           var refx = storage.ref().child(path);
-          return refx.put(blob, { contentType: 'image/jpeg' }).then(function (snap) { return snap.ref.getDownloadURL(); })
+          return refx.put(blob, { contentType: ctype }).then(function (snap) { return snap.ref.getDownloadURL(); })
             .then(function (url) { p.imgs.push(url); done++; if (statusEl) statusEl.textContent = 'Subiendo ' + done + '/' + total + '…'; });
         });
       });
     }, Promise.resolve()).then(function () {
       setDirty('catalog');
-      if (statusEl) statusEl.textContent = '✅ ' + done + ' foto(s) subida(s). No olvides Guardar y publicar.';
+      if (statusEl) statusEl.textContent = '✅ ' + done + ' archivo(s) subido(s). No olvides Guardar y publicar.';
       draw();
     }).catch(function (e) {
       if (statusEl) statusEl.textContent = '⚠️ No se pudo subir: ' + (e && e.message || e);
     });
+  }
+
+  function uploadCatImage(cid, file) {
+    initFb();
+    var c = S.cat.categories.filter(function (x) { return x.id === cid; })[0];
+    if (!c) return;
+    if (!storage) { toast('Activa Storage en Firebase para subir fotos.'); return; }
+    toast('Subiendo foto de categoría…');
+    resizeImage(file, 800, 0.85).then(function (blob) {
+      var path = 'products/cat/' + cid + '/' + Date.now() + '.jpg';
+      return storage.ref().child(path).put(blob, { contentType: 'image/jpeg' }).then(function (s) { return s.ref.getDownloadURL(); });
+    }).then(function (url) {
+      c.img = url; setDirty('catalog'); toast('✅ Foto lista. Guarda y publica.'); draw();
+    }).catch(function (e) { toast('No se pudo subir: ' + (e && e.message || e)); });
+  }
+
+  /* ---------- arrastrar para reordenar ---------- */
+  function moveProd(fromId, toId) {
+    if (!fromId || fromId === toId) return;
+    var arr = S.cat.products, fi = idxProd(fromId);
+    if (fi < 0) return;
+    var item = arr.splice(fi, 1)[0];
+    var ti = idxProd(toId); if (ti < 0) ti = arr.length;
+    arr.splice(ti, 0, item); setDirty('catalog'); draw();
+  }
+  function moveCat(fromId, toId) {
+    if (!fromId || fromId === toId) return;
+    var arr = S.cat.categories;
+    function idx(id) { for (var i = 0; i < arr.length; i++) if (arr[i].id === id) return i; return -1; }
+    var fi = idx(fromId); if (fi < 0) return;
+    var item = arr.splice(fi, 1)[0];
+    var ti = idx(toId); if (ti < 0) ti = arr.length;
+    arr.splice(ti, 0, item); setDirty('catalog'); draw();
+  }
+  function onDragStart(e) {
+    var h = e.target.closest && e.target.closest('[data-draghandle]');
+    if (!h) return;
+    S.dragId = h.getAttribute('data-id'); S.dragKind = h.getAttribute('data-dragkind');
+    try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', S.dragId || ''); } catch (_) {}
+  }
+  function onDragOver(e) { if (S.dragId) e.preventDefault(); }
+  function onDrop(e) {
+    if (!S.dragId) return;
+    e.preventDefault();
+    if (S.dragKind === 'prod') { var r = e.target.closest('[data-pid]'); if (r) moveProd(S.dragId, r.getAttribute('data-pid')); }
+    else if (S.dragKind === 'cat') { var cr = e.target.closest('[data-cidrow]'); if (cr) moveCat(S.dragId, cr.getAttribute('data-cidrow')); }
+    S.dragId = null; S.dragKind = null;
   }
 
   /* ---------- eventos ---------- */
@@ -416,12 +481,20 @@
       var p = findProd(id); if (!p) return; if (!p.imgs) p.imgs = p.img ? [p.img] : [];
       p.imgs.push(u); setDirty('catalog'); return draw();
     }
-    if (act === 'img-del' || act === 'img-up' || act === 'img-down') {
+    if (act === 'img-del' || act === 'img-up' || act === 'img-down' || act === 'img-main') {
       var pp = findProd(id); if (!pp || !pp.imgs) return;
       var k = Number(b.getAttribute('data-i'));
       if (act === 'img-del') { pp.imgs.splice(k, 1); }
+      else if (act === 'img-main') { var it = pp.imgs.splice(k, 1)[0]; pp.imgs.unshift(it); }
       else { var m = act === 'img-up' ? k - 1 : k + 1; if (m < 0 || m >= pp.imgs.length) return; var tmp = pp.imgs[k]; pp.imgs[k] = pp.imgs[m]; pp.imgs[m] = tmp; }
       setDirty('catalog'); return draw();
+    }
+
+    // foto de categoría
+    if (act === 'catimg-del') {
+      var cc = S.cat.categories.filter(function (x) { return x.id === cid; })[0];
+      if (cc) { delete cc.img; setDirty('catalog'); draw(); }
+      return;
     }
 
     // categorías
@@ -474,9 +547,13 @@
     if (t.hasAttribute('data-conf')) { S.conf[t.getAttribute('data-conf')] = t.value; setDirty('config'); return; }
     // legal
     if (t.hasAttribute('data-legal')) { S.legal[t.getAttribute('data-legal')] = t.value; setDirty('legal'); return; }
-    // subida de fotos
+    // subida de fotos / videos
     if (t.getAttribute('data-act') === 'img-upload' && t.files && t.files.length) {
       uploadFiles(t.getAttribute('data-id'), t.files); t.value = '';
+    }
+    // subida de foto de categoría
+    if (t.getAttribute('data-act') === 'catimg-upload' && t.files && t.files.length) {
+      uploadCatImage(t.getAttribute('data-cid'), t.files[0]); t.value = '';
     }
   }
 
@@ -492,6 +569,9 @@
     root.addEventListener('click', onClick);
     root.addEventListener('input', onChangeInput);
     root.addEventListener('change', onChangeInput);
+    root.addEventListener('dragstart', onDragStart);
+    root.addEventListener('dragover', onDragOver);
+    root.addEventListener('drop', onDrop);
     root.__edBound = true;
   }
 

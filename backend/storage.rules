@@ -16,13 +16,13 @@ service firebase.storage {
         && request.auth.token.email_verified == true;
     }
 
-    // Fotos de productos (las sube el administrador desde el panel)
+    // Fotos y videos de productos (los sube el administrador desde el panel)
     match /products/{allPaths=**} {
       allow read: if true;
-      // Hasta 8 MB por imagen y solo archivos de imagen.
+      // Hasta 60 MB por archivo; solo imágenes o videos.
       allow write: if isAdmin()
-        && request.resource.size < 8 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
+        && request.resource.size < 60 * 1024 * 1024
+        && request.resource.contentType.matches('(image|video)/.*');
       allow delete: if isAdmin();
     }
 

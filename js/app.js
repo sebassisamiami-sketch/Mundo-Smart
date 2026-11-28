@@ -24,8 +24,19 @@
   function svg(name) {
     return '<svg viewBox="0 0 48 48" aria-hidden="true">' + (ICONS[name] || ICONS.case) + '</svg>';
   }
+  function isVideo(u) { return /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(String(u || '')); }
+  function mediaTag(u, alt, full) {
+    if (!u) return '';
+    if (isVideo(u)) {
+      return full
+        ? '<video src="' + esc(u) + '" controls playsinline preload="metadata"></video>'
+        : '<video src="' + esc(u) + '#t=0.5" muted playsinline preload="metadata" tabindex="-1"></video>';
+    }
+    return '<img src="' + esc(u) + '" alt="' + esc(alt || '') + '" loading="lazy" />';
+  }
   function media(p) {
-    return p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" />' : svg(p.icon);
+    var u = p.img || gallery(p)[0];
+    return u ? mediaTag(u, p.name, false) : svg(p.icon);
   }
   // Lista de fotos de un producto (varias si tiene galería, o una, o ninguna)
   function gallery(p) {
@@ -36,9 +47,9 @@
   function carousel(p) {
     var imgs = gallery(p);
     if (imgs.length === 0) return '<div class="car-single">' + svg(p.icon) + '</div>';
-    if (imgs.length === 1) return '<div class="car-single"><img src="' + esc(imgs[0]) + '" alt="' + esc(p.name) + '" /></div>';
+    if (imgs.length === 1) return '<div class="car-single">' + mediaTag(imgs[0], p.name, true) + '</div>';
     var slides = imgs.map(function (u, i) {
-      return '<div class="car-slide"><img src="' + esc(u) + '" alt="' + esc(p.name) + ' foto ' + (i + 1) + '" loading="lazy" /></div>';
+      return '<div class="car-slide">' + mediaTag(u, p.name + ' foto ' + (i + 1), true) + '</div>';
     }).join('');
     var dots = imgs.map(function (_, i) {
       return '<button class="car-dot' + (i === 0 ? ' on' : '') + '" data-i="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
@@ -144,7 +155,7 @@
     catGrid.innerHTML = CATS.map(function (c, i) {
       return '<button class="cat" data-cat="' + c.id + '" data-reveal style="--d:' + (i * 0.07).toFixed(2) + 's">' +
         '<svg class="arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17 17 7M8 7h9v9"/></svg>' +
-        svg(c.icon) +
+        (c.img ? '<img class="cat-img" src="' + esc(c.img) + '" alt="" />' : svg(c.icon)) +
         '<div><h3>' + esc(c.name) + '</h3><p>' + esc(c.desc) + '</p></div></button>';
     }).join('');
     observe(catGrid);

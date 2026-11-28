@@ -483,3 +483,13 @@ select option { background: #18181b; color: #fff; }
   .full-grid { grid-template-columns: 1fr; gap: 20px; }
   .full-media { position: static; height: auto; aspect-ratio: 1 / 1; }
 }
+
+/* ---------- Video en tarjetas y carruseles ---------- */
+.thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.item .t video { width: 100%; height: 100%; object-fit: cover; }
+.car-single video, .car-slide video { width: 100%; height: 100%; object-fit: cover; background: #000; display: block; }
+.m-media video { width: 100%; height: 100%; object-fit: cover; }
+.full-media .car-slide video, .full-media .car-single video { object-fit: contain; background: #f4f5f7; padding: 10px; }
+
+/* ---------- Foto de categoría (opcional) ---------- */
+.cat .cat-img { width: 46px; height: 46px; object-fit: cover; border-radius: 12px; display: block; }
