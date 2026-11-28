@@ -279,3 +279,55 @@ tr.is-new td{box-shadow:inset 3px 0 0 var(--accent)}
 .ed-filter select{background:var(--bg2);border:1px solid var(--line);color:var(--txt);
   border-radius:9px;padding:7px 10px;font-size:13px}
 .ed-filter select:focus{border-color:var(--accent);outline:none}
+
+/* ===================== Íconos y animaciones (pulido estilo IG) ===================== */
+.eic{width:16px;height:16px;flex:0 0 auto;display:inline-block}
+.btn,.btn-sm,.ic,.ed-subtab{display:inline-flex;align-items:center;gap:7px;transition:transform .12s var(--ease),border-color .2s,background .2s,filter .2s}
+.btn:active,.btn-sm:active,.ic:active{transform:scale(.93)}
+.ed-subtab .eic{width:17px;height:17px}
+.ed-subtab{transition:transform .15s var(--ease),background .25s,color .2s,border-color .2s}
+.ed-subtab.on{transform:translateY(-1px)}
+.ic .eic{width:16px;height:16px}
+.ed-img-acts .ic .eic{width:13px;height:13px}
+.ed-main{display:inline-flex;align-items:center;gap:3px}
+.ed-main .eic{width:10px;height:10px}
+.ed-vidtag{display:inline-flex}
+.ed-vidtag .eic{width:13px;height:13px}
+.ed-thumb .ph .eic,.ed-catimg .ph .eic{width:22px;height:22px;opacity:.5}
+
+/* fila: transición suave + animación al mover/subir/crear */
+.ed-row{transition:border-color .2s var(--ease),box-shadow .25s var(--ease),transform .18s var(--ease)}
+.ed-row:hover{transform:translateY(-1px)}
+@keyframes edFlash{
+  0%{box-shadow:0 0 0 2px var(--accent),0 10px 30px rgba(91,140,255,.35);transform:scale(1.012)}
+  60%{box-shadow:0 0 0 2px rgba(91,140,255,.5)}
+  100%{box-shadow:0 0 0 0 rgba(91,140,255,0);transform:scale(1)}
+}
+.ed-row.flash{animation:edFlash .8s var(--ease)}
+
+/* cambio de sección: entrada suave */
+@keyframes edFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ed-body.fade{animation:edFade .3s var(--ease)}
+
+/* lista: aparición de filas escalonada la primera vez */
+@keyframes edRowIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ed-body.fade .ed-row{animation:edRowIn .34s var(--ease) both}
+.ed-body.fade .ed-row:nth-child(1){animation-delay:.02s}
+.ed-body.fade .ed-row:nth-child(2){animation-delay:.06s}
+.ed-body.fade .ed-row:nth-child(3){animation-delay:.1s}
+.ed-body.fade .ed-row:nth-child(4){animation-delay:.14s}
+.ed-body.fade .ed-row:nth-child(5){animation-delay:.18s}
+.ed-body.fade .ed-row:nth-child(n+6){animation-delay:.22s}
+
+/* arrastre */
+.ic.drag{cursor:grab}
+.ic.drag:active{cursor:grabbing;transform:scale(1.1)}
+.ed-img{transition:transform .18s var(--ease),box-shadow .2s}
+.ed-img:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+
+@media (prefers-reduced-motion: reduce){
+  .ed-row.flash,.ed-body.fade,.ed-body.fade .ed-row{animation:none}
+}
+
+.tab{display:inline-flex;align-items:center;gap:7px}
+.tic{width:16px;height:16px;flex:0 0 auto}

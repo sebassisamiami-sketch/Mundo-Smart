@@ -28,6 +28,7 @@
     legal: { terminos: '', privacidad: '' }, legalExists: false,
     dirty: { catalog: false, config: false, legal: false },
     openId: null,
+    flashId: null,
   };
   var root = null;
 
@@ -45,8 +46,36 @@
   function catName(id) { var c = S.cat.categories.filter(function (x) { return x.id === id; })[0]; return c ? c.name : '—'; }
   function imgsOf(p) { if (p.imgs && p.imgs.length) return p.imgs; return p.img ? [p.img] : []; }
   function isVideo(u) { return /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(String(u || '')); }
+
+  /* ---------- Íconos de línea (estilo Instagram) ---------- */
+  var ICN = {
+    box: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/>',
+    tag: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><path d="M7 7h.01"/>',
+    sliders: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+    file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    up: '<path d="M18 15l-6-6-6 6"/>',
+    down: '<path d="M6 9l6 6 6-6"/>',
+    left: '<path d="M15 18l-6-6 6-6"/>',
+    right: '<path d="M9 18l6-6-6-6"/>',
+    edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>',
+    trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+    star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+    camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+    video: '<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+    grip: '<circle cx="9" cy="5" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="9" cy="19" r="1.4"/><circle cx="15" cy="5" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="15" cy="19" r="1.4"/>',
+  };
+  function icon(name) {
+    var p = ICN[name] || '';
+    var attrs = name === 'grip' ? 'fill="currentColor" stroke="none"' : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+    return '<svg class="eic" viewBox="0 0 24 24" ' + attrs + ' aria-hidden="true">' + p + '</svg>';
+  }
   function edThumb(u) {
-    if (!u) return '<span class="ph">▣</span>';
+    if (!u) return '<span class="ph">' + icon('image') + '</span>';
     return isVideo(u) ? '<video src="' + esc(u) + '#t=0.5" muted preload="metadata"></video>' : '<img src="' + esc(u) + '" alt="">';
   }
 
@@ -113,9 +142,9 @@
   /* ---------- dibujo principal ---------- */
   function draw() {
     if (!S.loaded) return load();
-    var subs = [['productos', '📦 Productos'], ['categorias', '🏷 Categorías'], ['ajustes', '⚙️ Ajustes'], ['legal', '📄 Textos y políticas']];
+    var subs = [['productos', 'box', 'Productos'], ['categorias', 'tag', 'Categorías'], ['ajustes', 'sliders', 'Ajustes'], ['legal', 'file', 'Textos y políticas']];
     var tabs = subs.map(function (s) {
-      return '<button class="ed-subtab' + (S.sub === s[0] ? ' on' : '') + '" data-sub="' + s[0] + '">' + s[1] + '</button>';
+      return '<button class="ed-subtab' + (S.sub === s[0] ? ' on' : '') + '" data-sub="' + s[0] + '">' + icon(s[1]) + '<span>' + s[2] + '</span></button>';
     }).join('');
     var body = S.sub === 'productos' ? viewProductos()
       : S.sub === 'categorias' ? viewCategorias()
@@ -124,7 +153,9 @@
     root.innerHTML = '<div class="ed">' +
       '<div class="ed-intro">Edita tu tienda aquí. Los cambios se publican al tocar <b>Guardar</b> y se ven en la tienda al instante.</div>' +
       '<div class="ed-subtabs">' + tabs + '</div>' +
-      '<div class="ed-body">' + body + '</div></div>';
+      '<div class="ed-body' + (S._lastSub !== S.sub ? ' fade' : '') + '">' + body + '</div></div>';
+    S._lastSub = S.sub;
+    if (S.flashId) { setTimeout(function () { S.flashId = null; }, 80); }
   }
 
   /* ================= PRODUCTOS ================= */
@@ -138,32 +169,33 @@
     if (!list.length) rows = '<div class="empty">' + (filter === 'all' ? 'No hay productos. Agrega el primero.' : 'No hay productos en esta categoría.') + '</div>';
     return hint +
       '<div class="ed-bar">' +
-        '<button class="btn btn-accent" data-act="prod-add">➕ Nuevo producto</button>' +
+        '<button class="btn btn-accent" data-act="prod-add">' + icon('plus') + 'Nuevo producto</button>' +
         '<label class="ed-filter">Ver: <select data-prodfilter>' + opts + '</select></label>' +
         '<span class="ed-count">' + list.length + (filter === 'all' ? ' productos' : ' en esta categoría') + '</span>' +
         '<span class="spacer"></span>' +
         '<span class="ed-dirty" data-dirty="catalog">' + (S.dirty.catalog ? '● Cambios sin guardar' : '') + '</span>' +
-        '<button class="btn btn-accent" data-act="catalog-save">💾 Guardar y publicar</button>' +
+        '<button class="btn btn-accent" data-act="catalog-save">' + icon('check') + 'Guardar y publicar</button>' +
       '</div>' +
-      (filter !== 'all' ? '<div class="ed-note">Viendo solo <b>' + esc(catName(filter)) + '</b>. Aquí ordenas los productos <b>dentro de esta categoría</b> con ▲▼ o arrastrando la manija ⠿.</div>' : '') +
+      (filter !== 'all' ? '<div class="ed-note">Viendo solo <b>' + esc(catName(filter)) + '</b>. Aquí ordenas los productos <b>dentro de esta categoría</b> con las flechas o arrastrando la manija.</div>' : '') +
       '<div class="ed-list">' + rows + '</div>';
   }
 
   function productRow(p, i) {
     var open = S.openId === p.id;
+    var flash = S.flashId === p.id ? ' flash' : '';
     var head = '<div class="ed-row-h">' +
-        '<span class="ic drag" draggable="true" data-draghandle data-dragkind="prod" data-id="' + esc(p.id) + '" title="Arrastrar para mover">⠿</span>' +
+        '<span class="ic drag" draggable="true" data-draghandle data-dragkind="prod" data-id="' + esc(p.id) + '" title="Arrastrar para mover">' + icon('grip') + '</span>' +
         '<div class="ed-thumb">' + edThumb(imgsOf(p)[0]) + '</div>' +
         '<div class="ed-row-main"><b>' + esc(p.name || '(sin nombre)') + '</b>' +
           '<span class="ed-row-sub">' + esc(catName(p.cat)) + ' · ' + money(p.price) + (p.badge ? ' · ' + esc(p.badge) : '') + '</span></div>' +
         '<div class="ed-row-actions">' +
-          '<button class="ic" data-act="prod-up" data-id="' + esc(p.id) + '" title="Subir">▲</button>' +
-          '<button class="ic" data-act="prod-down" data-id="' + esc(p.id) + '" title="Bajar">▼</button>' +
-          '<button class="ic" data-act="prod-toggle" data-id="' + esc(p.id) + '">' + (open ? 'Cerrar' : '✏️ Editar') + '</button>' +
-          '<button class="ic ic-danger" data-act="prod-del" data-id="' + esc(p.id) + '" title="Eliminar">🗑</button>' +
+          '<button class="ic" data-act="prod-up" data-id="' + esc(p.id) + '" title="Subir">' + icon('up') + '</button>' +
+          '<button class="ic" data-act="prod-down" data-id="' + esc(p.id) + '" title="Bajar">' + icon('down') + '</button>' +
+          '<button class="ic" data-act="prod-toggle" data-id="' + esc(p.id) + '">' + (open ? icon('x') + 'Cerrar' : icon('edit') + 'Editar') + '</button>' +
+          '<button class="ic ic-danger" data-act="prod-del" data-id="' + esc(p.id) + '" title="Eliminar">' + icon('trash') + '</button>' +
         '</div></div>';
-    if (!open) return '<div class="ed-row" data-pid="' + esc(p.id) + '">' + head + '</div>';
-    return '<div class="ed-row open" data-pid="' + esc(p.id) + '">' + head + productForm(p) + '</div>';
+    if (!open) return '<div class="ed-row' + flash + '" data-pid="' + esc(p.id) + '">' + head + '</div>';
+    return '<div class="ed-row open' + flash + '" data-pid="' + esc(p.id) + '">' + head + productForm(p) + '</div>';
   }
 
   function field(label, id, fieldName, val, type, ph) {
@@ -201,24 +233,24 @@
     var thumbs = imgs.map(function (u, i) {
       var vid = isVideo(u);
       return '<div class="ed-img">' +
-        (i === 0 ? '<span class="ed-main">★ Principal</span>' : '') +
-        (vid ? '<span class="ed-vidtag">📹</span>' : '') +
+        (i === 0 ? '<span class="ed-main">' + icon('star') + 'Principal</span>' : '') +
+        (vid ? '<span class="ed-vidtag">' + icon('video') + '</span>' : '') +
         (vid ? '<video src="' + esc(u) + '#t=0.5" muted preload="metadata"></video>' : '<img src="' + esc(u) + '" alt="">') +
         '<div class="ed-img-acts">' +
-          (i > 0 ? '<button class="ic" data-act="img-main" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Hacer principal">★</button>' : '') +
-          '<button class="ic" data-act="img-up" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover izquierda">◀</button>' +
-          '<button class="ic" data-act="img-down" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover derecha">▶</button>' +
-          '<button class="ic ic-danger" data-act="img-del" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Quitar">✕</button>' +
+          (i > 0 ? '<button class="ic" data-act="img-main" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Hacer principal">' + icon('star') + '</button>' : '') +
+          '<button class="ic" data-act="img-up" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover izquierda">' + icon('left') + '</button>' +
+          '<button class="ic" data-act="img-down" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Mover derecha">' + icon('right') + '</button>' +
+          '<button class="ic ic-danger" data-act="img-del" data-id="' + esc(p.id) + '" data-i="' + i + '" title="Quitar">' + icon('x') + '</button>' +
         '</div></div>';
     }).join('');
     if (!imgs.length) thumbs = '<div class="ed-img-empty">Sin fotos ni videos todavía.</div>';
-    return '<div class="ed-images"><span class="ed-f-label">Fotos y videos <small>(la primera es la principal · arrastra ◀▶ o usa ★ para ordenar)</small></span>' +
+    return '<div class="ed-images"><span class="ed-f-label">Fotos y videos <small>(la primera es la principal · usa las flechas o la estrella para ordenar)</small></span>' +
       '<div class="ed-img-grid">' + thumbs + '</div>' +
       '<div class="ed-img-add">' +
-        '<label class="btn btn-sm">📤 Subir foto(s)<input type="file" accept="image/*" multiple data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
-        '<label class="btn btn-sm">📹 Subir video<input type="file" accept="video/*" data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
+        '<label class="btn btn-sm">' + icon('camera') + 'Subir foto(s)<input type="file" accept="image/*" multiple data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
+        '<label class="btn btn-sm">' + icon('video') + 'Subir video<input type="file" accept="video/*" data-act="img-upload" data-id="' + esc(p.id) + '" hidden></label>' +
         '<input type="url" class="ed-url" data-id="' + esc(p.id) + '" placeholder="…o pega el enlace de una imagen/video (https://…)">' +
-        '<button class="btn btn-sm" data-act="img-url" data-id="' + esc(p.id) + '">Agregar enlace</button>' +
+        '<button class="btn btn-sm" data-act="img-url" data-id="' + esc(p.id) + '">' + icon('link') + 'Enlace</button>' +
       '</div>' +
       '<div class="ed-up-status" data-up="' + esc(p.id) + '"></div></div>';
   }
@@ -233,12 +265,13 @@
         return '<option value="' + esc(k) + '"' + (k === (c.icon || '') ? ' selected' : '') + '>' + (k || '(sin ícono)') + '</option>';
       }).join('');
       var used = S.cat.products.filter(function (p) { return p.cat === c.id; }).length;
-      var photo = '<div class="ed-catimg">' + (c.img ? edThumb(c.img) : '<span class="ph">▣</span>') +
-        '<label class="btn btn-sm">📤 Subir<input type="file" accept="image/*" data-act="catimg-upload" data-cid="' + esc(c.id) + '" hidden></label>' +
-        (c.img ? '<button class="ic ic-danger" data-act="catimg-del" data-cid="' + esc(c.id) + '" title="Quitar">✕</button>' : '') +
+      var photo = '<div class="ed-catimg">' + (c.img ? edThumb(c.img) : '<span class="ph">' + icon('image') + '</span>') +
+        '<label class="btn btn-sm">' + icon('camera') + 'Subir<input type="file" accept="image/*" data-act="catimg-upload" data-cid="' + esc(c.id) + '" hidden></label>' +
+        (c.img ? '<button class="ic ic-danger" data-act="catimg-del" data-cid="' + esc(c.id) + '" title="Quitar">' + icon('x') + '</button>' : '') +
         '</div>';
-      return '<div class="ed-row open" data-cidrow="' + esc(c.id) + '"><div class="ed-form">' +
-        '<div class="ed-cat-head"><span class="ic drag" draggable="true" data-draghandle data-dragkind="cat" data-id="' + esc(c.id) + '" title="Arrastrar para mover">⠿</span><b>' + esc(c.name || '(sin nombre)') + '</b><span class="ed-count">' + used + ' productos</span></div>' +
+      var cflash = S.flashId === c.id ? ' flash' : '';
+      return '<div class="ed-row open' + cflash + '" data-cidrow="' + esc(c.id) + '"><div class="ed-form">' +
+        '<div class="ed-cat-head"><span class="ic drag" draggable="true" data-draghandle data-dragkind="cat" data-id="' + esc(c.id) + '" title="Arrastrar para mover">' + icon('grip') + '</span><b>' + esc(c.name || '(sin nombre)') + '</b><span class="ed-count">' + used + ' productos</span></div>' +
         '<div class="ed-grid">' +
           '<label class="ed-f"><span>Nombre</span><input data-cfield="name" data-cid="' + esc(c.id) + '" value="' + esc(c.name) + '"></label>' +
           '<label class="ed-f"><span>Descripción</span><input data-cfield="desc" data-cid="' + esc(c.id) + '" value="' + esc(c.desc) + '"></label>' +
@@ -246,17 +279,17 @@
           '<label class="ed-f"><span>Foto de la categoría (opcional)</span>' + photo + '</label>' +
         '</div>' +
         '<div class="ed-row-actions" style="justify-content:flex-start">' +
-          '<button class="ic" data-act="cat-up" data-cid="' + esc(c.id) + '">▲ Subir</button>' +
-          '<button class="ic" data-act="cat-down" data-cid="' + esc(c.id) + '">▼ Bajar</button>' +
-          '<button class="ic ic-danger" data-act="cat-del" data-cid="' + esc(c.id) + '">🗑 Eliminar</button>' +
+          '<button class="ic" data-act="cat-up" data-cid="' + esc(c.id) + '">' + icon('up') + 'Subir</button>' +
+          '<button class="ic" data-act="cat-down" data-cid="' + esc(c.id) + '">' + icon('down') + 'Bajar</button>' +
+          '<button class="ic ic-danger" data-act="cat-del" data-cid="' + esc(c.id) + '">' + icon('trash') + 'Eliminar</button>' +
         '</div></div></div>';
     }).join('');
     if (!S.cat.categories.length) rows = '<div class="empty">No hay categorías.</div>';
     return '<div class="ed-bar">' +
-        '<button class="btn btn-accent" data-act="cat-add">➕ Nueva categoría</button>' +
+        '<button class="btn btn-accent" data-act="cat-add">' + icon('plus') + 'Nueva categoría</button>' +
         '<span class="spacer"></span>' +
         '<span class="ed-dirty" data-dirty="catalog">' + (S.dirty.catalog ? '● Cambios sin guardar' : '') + '</span>' +
-        '<button class="btn btn-accent" data-act="catalog-save">💾 Guardar y publicar</button>' +
+        '<button class="btn btn-accent" data-act="catalog-save">' + icon('check') + 'Guardar y publicar</button>' +
       '</div><div class="ed-list">' + rows + '</div>';
   }
 
@@ -269,7 +302,7 @@
     return '<div class="ed-bar">' +
         '<span class="ed-dirty" data-dirty="config">' + (S.dirty.config ? '● Cambios sin guardar' : '') + '</span>' +
         '<span class="spacer"></span>' +
-        '<button class="btn btn-accent" data-act="config-save">💾 Guardar ajustes</button>' +
+        '<button class="btn btn-accent" data-act="config-save">' + icon('check') + 'Guardar ajustes</button>' +
       '</div>' +
       '<div class="ed-form"><div class="ed-grid">' +
         f('Nombre de la tienda', 'storeName', c.storeName) +
@@ -289,7 +322,7 @@
     return '<div class="ed-bar">' +
         '<span class="ed-dirty" data-dirty="legal">' + (S.dirty.legal ? '● Cambios sin guardar' : '') + '</span>' +
         '<span class="spacer"></span>' +
-        '<button class="btn btn-accent" data-act="legal-save">💾 Guardar textos</button>' +
+        '<button class="btn btn-accent" data-act="legal-save">' + icon('check') + 'Guardar textos</button>' +
       '</div>' +
       '<p class="ed-tip">Formato: <b>## Subtítulo</b> para títulos, <b>- </b> al inicio para viñetas, línea en blanco separa párrafos, <b>**negrita**</b> y <b>[texto](enlace)</b>. Al guardar, las páginas de Términos y Privacidad se actualizan solas.</p>' +
       '<div class="ed-legal">' +
@@ -328,7 +361,7 @@
       draw();
     }).catch(function (e) {
       toast('No se pudo guardar: ' + (e && e.message || e));
-      Array.prototype.forEach.call(root.querySelectorAll('[data-act="catalog-save"]'), function (b) { b.disabled = false; b.textContent = '💾 Guardar y publicar'; });
+      Array.prototype.forEach.call(root.querySelectorAll('[data-act="catalog-save"]'), function (b) { b.disabled = false; b.innerHTML = icon('check') + 'Guardar y publicar'; });
     });
   }
   function saveConfig() {
@@ -393,7 +426,7 @@
         });
       });
     }, Promise.resolve()).then(function () {
-      setDirty('catalog');
+      setDirty('catalog'); S.flashId = productId;
       if (statusEl) statusEl.textContent = '✅ ' + done + ' archivo(s) subido(s). No olvides Guardar y publicar.';
       draw();
     }).catch(function (e) {
@@ -422,7 +455,7 @@
     if (fi < 0) return;
     var item = arr.splice(fi, 1)[0];
     var ti = idxProd(toId); if (ti < 0) ti = arr.length;
-    arr.splice(ti, 0, item); setDirty('catalog'); draw();
+    arr.splice(ti, 0, item); S.flashId = fromId; setDirty('catalog'); draw();
   }
   function moveCat(fromId, toId) {
     if (!fromId || fromId === toId) return;
@@ -431,7 +464,7 @@
     var fi = idx(fromId); if (fi < 0) return;
     var item = arr.splice(fi, 1)[0];
     var ti = idx(toId); if (ti < 0) ti = arr.length;
-    arr.splice(ti, 0, item); setDirty('catalog'); draw();
+    arr.splice(ti, 0, item); S.flashId = fromId; setDirty('catalog'); draw();
   }
   function onDragStart(e) {
     var h = e.target.closest && e.target.closest('[data-draghandle]');
@@ -466,7 +499,7 @@
     if (act === 'prod-add') {
       var defCat = (S.prodFilter && S.prodFilter !== 'all') ? S.prodFilter : ((S.cat.categories[0] || {}).id || '');
       var np = { id: genId('p'), name: 'Nuevo producto', cat: defCat, price: 0, was: 0, badge: '', short: '', description: '', dropiId: '', provider: '', icon: '', features: [], specs: [], imgs: [], img: '' };
-      S.cat.products.unshift(np); S.openId = np.id; setDirty('catalog'); return draw();
+      S.cat.products.unshift(np); S.openId = np.id; S.flashId = np.id; setDirty('catalog'); return draw();
     }
     if (act === 'prod-toggle') { S.openId = (S.openId === id ? null : id); return draw(); }
     if (act === 'prod-del') {
@@ -482,7 +515,7 @@
       if (fi < 0 || fj < 0 || fj >= lst.length) return;
       var gi = idxProd(lst[fi].id), gj = idxProd(lst[fj].id);
       var t = S.cat.products[gi]; S.cat.products[gi] = S.cat.products[gj]; S.cat.products[gj] = t;
-      setDirty('catalog'); return draw();
+      S.flashId = id; setDirty('catalog'); return draw();
     }
 
     // imágenes
@@ -526,7 +559,7 @@
       var cj = act === 'cat-up' ? ci - 1 : ci + 1;
       if (ci < 0 || cj < 0 || cj >= S.cat.categories.length) return;
       var ct = S.cat.categories[ci]; S.cat.categories[ci] = S.cat.categories[cj]; S.cat.categories[cj] = ct;
-      setDirty('catalog'); return draw();
+      S.flashId = cid; setDirty('catalog'); return draw();
     }
 
     // legal
