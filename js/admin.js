@@ -64,7 +64,7 @@
     if (!firebase.apps.length) firebase.initializeApp(cfg);
     auth = firebase.auth(); db = firebase.firestore();
   } catch (e) { showErr('No se pudo inicializar Firebase.'); return; }
-  el.note.innerHTML = 'Solo <b>' + esc(ADMIN_EMAIL) + '</b> puede entrar. Google pedirá tu verificación en 2 pasos.';
+  el.note.innerHTML = 'Solo la cuenta autorizada puede entrar. Google pedirá tu verificación en 2 pasos.';
 
   /* ---------- Sesión de 6 horas ---------- */
   function sessionStart() { return Number(localStorage.getItem(SKEY) || 0); }
