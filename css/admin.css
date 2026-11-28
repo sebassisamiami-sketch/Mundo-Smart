@@ -335,3 +335,30 @@ tr.is-new td{box-shadow:inset 3px 0 0 var(--accent)}
 /* arrastre: tarjeta levantada y guía del destino */
 .ed-row.dragging{opacity:.4;transform:scale(.99)}
 .ed-row.dragover{border-color:var(--accent);box-shadow:0 -3px 0 0 var(--accent) inset}
+
+/* ===================== Login pulido estilo Instagram ===================== */
+.login-wrap{position:relative;overflow:hidden;
+  background:radial-gradient(900px 500px at 15% 0%,rgba(214,41,118,.18),transparent 60%),
+             radial-gradient(900px 600px at 100% 100%,rgba(79,91,213,.22),transparent 55%),
+             radial-gradient(700px 500px at 60% 40%,rgba(250,126,30,.10),transparent 60%),
+             var(--bg)}
+.login-card{
+  position:relative;background:rgba(20,27,48,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:44px 36px 34px;max-width:400px;width:100%;
+  text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:loginIn .5s var(--ease)}
+@keyframes loginIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.login-mark{width:72px;height:72px;margin:0 auto 20px;border-radius:22px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);
+  box-shadow:0 12px 30px rgba(214,41,118,.4);animation:markFloat 5s ease-in-out infinite}
+.login-mark svg{width:34px;height:34px}
+@keyframes markFloat{50%{transform:translateY(-5px)}}
+.login-logo{font-size:30px;font-weight:800;letter-spacing:-.6px;margin:0 0 6px}
+.login-logo span{background:linear-gradient(135deg,#fa7e1e,#d62976,#962fbf,#4f5bd5);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.login-sub{color:var(--muted);margin:0 0 26px;font-size:14px;line-height:1.55}
+.gbtn{border-radius:14px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.gbtn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.35)}
+.badge2fa{display:inline-flex;align-items:center;gap:7px;margin-top:18px}
+.badge2fa .tic{width:14px;height:14px}
+.session-tag{display:inline-flex;align-items:center;gap:6px}
+.session-tag .tic{width:14px;height:14px}
